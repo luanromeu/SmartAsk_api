@@ -2,7 +2,12 @@ const sequelize = require('../../src/db');
 const Sequelize = require('sequelize');
 
 const Modelos = sequelize.define('Modelos', {
-  
+
+    id: {
+        type:Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     Modelo: {
         type: Sequelize.STRING,
         defaultValue: null

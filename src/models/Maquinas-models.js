@@ -2,7 +2,11 @@ const sequelize = require('../../src/db');
 const Sequelize = require('sequelize');
 
 const Maquinas = sequelize.define('Maquinas', {
-  
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     CodigoExibicao: {
         type: Sequelize.STRING
     },

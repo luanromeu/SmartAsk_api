@@ -25,7 +25,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-//Carrega Models
+//Carrega Modulos Banco
 const dblogin = require ('../src/db')
 const mlogin = require ('../src/models/login-model')
 const SaidasMaquinasCheckList = require ('../src/models/saidasmaquinaschecklist-model')
@@ -47,6 +47,8 @@ const TiposModelos = require ('../src/models/TiposModelos-models')
 
 //Carrega Rotas
 const loginroute = require ('../src/routes/login-routes')
+const machinesroute = require ('../src/routes/machines-routes')
 app.use('/login', loginroute)
+app.use('/machines', machinesroute )
 
 module.exports = app;
