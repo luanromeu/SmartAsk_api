@@ -1,4 +1,5 @@
 'use strict'
+
 const user = require('../../src/models/login-model')
 
 
@@ -10,6 +11,28 @@ exports.create = async (data) => {
 
     return res;
 
+}
+
+exports.update = async (id,data) => {
+
+    const res = await
+
+
+    user.update({
+
+        user: data.user,
+        email: data.email,
+        password: data.password,
+        role: data.role,
+        inativo: data.inativo,
+        autorizado: data.autorizado,
+        unidade: data.unidade,
+    } , {
+        where:{
+            id:id
+        }
+    })
+        return res;
 }
 
 

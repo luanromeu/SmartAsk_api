@@ -83,7 +83,8 @@ exports.authenticate = async(req, res, next) => {
 
 exports.get = async (req, res, next) => {
     try {
-        var data = await Repository.get()
+        var data = await
+         Repository.get()
         res.status(200).send(data)
     } catch (e) {
         console.log(e)
@@ -92,3 +93,21 @@ exports.get = async (req, res, next) => {
         })
     };
 };
+
+exports.UserUpdate = async (req, res, next) =>{
+    try {
+        var id = req.params.id 
+        var data = req.body
+        console.log('CAMPOS ', data)
+        console.log('ID USUARIO ',id)
+        await Repository.update(id,data)
+        res.status(200).send({
+            message:"Usuario atualizado com sucesso"
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            message:"Falha ao processar requisição"
+        })
+    }
+}
