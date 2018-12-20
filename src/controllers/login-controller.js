@@ -41,25 +41,37 @@ exports.authenticate = async(req, res, next) => {
             });
             return;
         }
-        
-        const token = await authService.generateToken({
-            id: user.id,
-            user: user.user,
-            role: user.role,
-            email:user.email,
-            Autorizado:user.Autorizado
-        });
-            res.status(201).send({
-            token: token,
-            data: {
+
+        else if (user.autorizado != 0 ) {   
+            
+            const token = await authService.generateToken({
+                id: user.id,
                 user: user.user,
-                password: user.password,
                 role: user.role,
                 email:user.email,
                 Autorizado:user.Autorizado
-                
-            }
-        });
+            });
+                res.status(201).send({
+                token: token,
+                data: {
+                    user: user.user,
+                    password: user.password,
+                    role: user.role,
+                    email:user.email,
+                    Autorizado:user.Autorizado
+                    
+                }
+            });
+            
+
+        } else {
+            res.status(401).send({
+                message:"Usuario não aprovado"
+            })
+            return;
+        }
+        
+       
     } catch (e) {
         console.log(e);
         console.log(user);
