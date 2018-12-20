@@ -10,4 +10,5 @@ router.get('/listaf/:AF', authService.authorize, controller.listByAF)
 router.post('/outmachines', controller.PostOut)
 
 
+
 module.exports = router;

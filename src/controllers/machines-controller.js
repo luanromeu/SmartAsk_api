@@ -37,10 +37,15 @@ exports.listByAF = async (req, res ,next) => {
     }
 }
 
-exports.PostOut = (req, res, next) =>{
+exports.PostOut = async (req, res) => {
+
     try {
-        var data = await
-        
+
+        var data = req.body
+        Repository.PostOut(data)
+        res.status(200).send({
+            message:"Saida cadastrada com sucesso"
+        })
         
     } catch (error) {
         console.log(error)

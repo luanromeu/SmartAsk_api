@@ -22,8 +22,9 @@ const User = sequelize.define('users', {
     },
     Autorizado: {
         type: Sequelize.TINYINT,
-        defaultValue:null
+        defaultValue:0
     },
+  
 
 });
 
