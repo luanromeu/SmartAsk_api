@@ -1,6 +1,7 @@
 'use strict'
 const user = require('../../src/models/login-model')
 
+
 exports.create = async (data) => {
 
     let User = user.build(data);

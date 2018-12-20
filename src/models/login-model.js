@@ -16,11 +16,11 @@ const User = sequelize.define('users', {
     role: {
         type: Sequelize.STRING
     },
-    Inativo: {
+    inativo: {
         type: Sequelize.TINYINT,
         defaultValue:null
     },
-    Autorizado: {
+    autorizado: {
         type: Sequelize.TINYINT,
         defaultValue:0
     },
