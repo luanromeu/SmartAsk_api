@@ -43,13 +43,13 @@ exports.authenticate = async(req, res, next) => {
         }
 
         else if (user.autorizado != 0 ) {   
-            
+
             const token = await authService.generateToken({
                 id: user.id,
                 user: user.user,
                 role: user.role,
                 email:user.email,
-                Autorizado:user.Autorizado
+                autorizado:user.autorizado
             });
                 res.status(201).send({
                 token: token,
@@ -58,7 +58,7 @@ exports.authenticate = async(req, res, next) => {
                     password: user.password,
                     role: user.role,
                     email:user.email,
-                    Autorizado:user.Autorizado
+                    autorizado:user.autorizado
                     
                 }
             });
