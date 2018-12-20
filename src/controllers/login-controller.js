@@ -45,7 +45,8 @@ exports.authenticate = async(req, res, next) => {
             id: user.id,
             user: user.user,
             role: user.role,
-            email:user.email
+            email:user.email,
+            Autorizado:user.Autorizado
         });
             res.status(201).send({
             token: token,
@@ -53,7 +54,8 @@ exports.authenticate = async(req, res, next) => {
                 user: user.user,
                 password: user.password,
                 role: user.role,
-                email:user.email
+                email:user.email,
+                Autorizado:user.Autorizado
                 
             }
         });
