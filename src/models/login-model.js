@@ -6,11 +6,19 @@ const User = sequelize.define('users', {
     user: {
         type: Sequelize.STRING
     },
+    email: {
+        type: Sequelize.STRING,
+        defaultValue:null
+    },
     password: {
         type: Sequelize.STRING
     },
     role: {
         type: Sequelize.STRING
+    },
+    Inativo: {
+        type: Sequelize.TINYINT,
+        defaultValue:null
     },
 
 });

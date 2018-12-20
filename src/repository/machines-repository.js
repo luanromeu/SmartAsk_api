@@ -18,3 +18,26 @@ exports.get = async () =>{
     Sequelize.query(sql , {type: sequelize.QueryTypes.SELECT})
     return res;
 }
+
+
+exports.getByAf = async (AF) => {
+    const sql = 
+        'SELECT Ma.CodigoExibicao, Mo.Modelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
+     + ' AM.Apelido, SC.Descricao AS Respostas, Substring(Mo.ApelidoOLD, 4, 2) AS Altura ' + "\n"
+     + ' FROM CheckListModelos CM ' + "\n"
+     + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
+	 + ' INNER JOIN ApelidosModelos AM ON idCheckListModelos = AM.id '  + "\n"
+	 + ' INNER JOIN GruposStatusCheckLists GSC ON GSC.id = ICM.idGruposStatusCheckList ' + "\n"
+	 + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
+	 + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
+	 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
+	 + ' WHERE Ma.CodigoExibicao = ' + AF 
+
+    const res = await
+    Sequelize.query(sql, {type: sequelize.QueryTypes.SELECT})
+    return res;
+}
+
+exports.PostOut = async (req, res, next) => {
+
+}

@@ -10,4 +10,5 @@ router.post('/authenticate', controller.authenticate)
 router.get('/list', authService.authorize ,controller.get)
 
 
+
 module.exports = router;

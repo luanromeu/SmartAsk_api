@@ -9,6 +9,7 @@ exports.post = async(req, res, next) => {
             await Repository.create({
             user: req.body.user,
             password: md5(req.body.password),
+            email:req.body.email,
             role: req.body.role
             
         });
@@ -43,14 +44,16 @@ exports.authenticate = async(req, res, next) => {
         const token = await authService.generateToken({
             id: user.id,
             user: user.user,
-            role: user.role
+            role: user.role,
+            email:user.email
         });
             res.status(201).send({
             token: token,
             data: {
                 user: user.user,
                 password: user.password,
-                role: user.role
+                role: user.role,
+                email:user.email
                 
             }
         });

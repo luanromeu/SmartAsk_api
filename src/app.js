@@ -44,6 +44,7 @@ const EntradasMaquinasItensFotosCheckList = require ('../src/models/EntradasMaqu
 const Maquinas = require ('../src/models/Maquinas-models')
 const Modelos = require ('../src/models/Modelos-models')
 const TiposModelos = require ('../src/models/TiposModelos-models')
+const ApelidoModelos = require ('../src/models/ApelidosModelos-models')
 
 //Carrega Rotas
 const loginroute = require ('../src/routes/login-routes')
