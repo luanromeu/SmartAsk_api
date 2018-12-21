@@ -42,9 +42,9 @@ exports.authenticate = async(req, res, next) => {
             });
             return;
         }
-
-        else if (user.autorizado != 0  || user.inativo != 0 ) {   
-
+       
+        else if (user.autorizado != 0  && user.inativo == 0 ) {   
+            console.log(user.autorizado ,  user.inativo)
             const token = await authService.generateToken({
                 id: user.id,
                 user: user.user,
@@ -67,7 +67,7 @@ exports.authenticate = async(req, res, next) => {
 
         } else {
             res.status(401).send({
-                message:"Usuario não aprovado"
+                message:"Usuario não aprovado ou Inativo"
             })
             return;
         }

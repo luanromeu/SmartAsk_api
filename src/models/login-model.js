@@ -17,12 +17,13 @@ const User = sequelize.define('users', {
         type: Sequelize.STRING
     },
     inativo: {
-        type: Sequelize.TINYINT
+        type: Sequelize.TINYINT,
+        defaultValue:'0'
         
     },
     autorizado: {
-        type: Sequelize.TINYINT,
-        defaultValue:'0'
+        type: Sequelize.TINYINT
+        
     },
     unidade: {
         type: Sequelize.STRING
