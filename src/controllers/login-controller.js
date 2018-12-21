@@ -43,7 +43,7 @@ exports.authenticate = async(req, res, next) => {
             return;
         }
 
-        else if (user.autorizado != 0 ) {   
+        else if (user.autorizado != 0  || user.inativo != 1 ) {   
 
             const token = await authService.generateToken({
                 id: user.id,
