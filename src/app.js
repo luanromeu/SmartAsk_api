@@ -45,11 +45,14 @@ const Maquinas = require ('../src/models/Maquinas-models')
 const Modelos = require ('../src/models/Modelos-models')
 const TiposModelos = require ('../src/models/TiposModelos-models')
 const ApelidoModelos = require ('../src/models/ApelidosModelos-models')
+const Empresas = require ('../src/models/Empresa-models')
 
 //Carrega Rotas
 const loginroute = require ('../src/routes/login-routes')
 const machinesroute = require ('../src/routes/machines-routes')
+const empresaroute = require ('../src/routes/empresa-routes')
 app.use('/login', loginroute)
 app.use('/machines', machinesroute )
+app.use('/business', empresaroute)
 
 module.exports = app;

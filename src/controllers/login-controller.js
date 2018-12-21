@@ -10,6 +10,7 @@ exports.post = async(req, res, next) => {
             user: req.body.user,
             password: md5(req.body.password),
             autorizado: req.body.autorizado,
+            unidade:req.body.unidade,
             email:req.body.email,
             role: req.body.role
             

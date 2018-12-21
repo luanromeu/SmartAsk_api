@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./bin/serverchecklist.js"
+    "start": "nodemon ./bin/serverchecklist.js",
+    "debug": "node --nolazy --inspect-brk=9229 ./bin/serverchecklist.js"
+    
   },
   "keywords": [],
   "author": "",
