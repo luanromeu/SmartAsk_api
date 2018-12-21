@@ -54,11 +54,14 @@ exports.getByAf = async (AF) => {
 exports.PostOut = async (data) => {
 
      try {
+
+       
         
         await 
-        Sequelize.query( 'INSERT INTO SaidasMaquinasCheckLists ' + "\n"
+        Sequelize.query( 
+          ' INSERT INTO SaidasMaquinasCheckLists ' + "\n"
         + ' (idMaquinas , Horimetro, Observacao) ' + "\n"
-        + ' VALUES (' + data.id + ',' + data.Horimetro + ',' + "'" + data.Observacao + "'" + ')'
+        + ' VALUES (' + data[2].id + ',' + data[2].Horimetro + ',' + "'" + data[2].Observacao + "'" + ')'
         
         , { type: sequelize.QueryTypes.INSERT })
         .catch((error)=> {
@@ -70,7 +73,7 @@ exports.PostOut = async (data) => {
         const resultUltimoItemInseridoSaidasMaquinas =
         await 
         Sequelize.query('SELECT id FROM SaidasMaquinasCheckLists ORDER BY id DESC LIMIT 1 '
-        
+
         , { type: sequelize.QueryTypes.SELECT })
         .catch((error)=> {
             console.log('ERRO AO CONSULTAR UltimoItemInseridoSaidasMaquinas ', error)
@@ -78,7 +81,7 @@ exports.PostOut = async (data) => {
         })
     
         await 
-        Sequelize.query('INSERT INTO CheckListModelos (idModelos) VALUES (' + data.idModelo + ')'
+        Sequelize.query('INSERT INTO CheckListModelos (idModelos) VALUES (' + data[0].idModelo + ')'
 
         , { type: sequelize.QueryTypes.INSERT })
         .catch((error)=> {
@@ -111,7 +114,7 @@ exports.PostOut = async (data) => {
         console.log(aux)
         
         await 
-        Sequelize.query('INSERT INTO GrupoStatusChecklists (Grupo) VALUES (' +  aux + ')'
+        Sequelize.query('INSERT INTO GruposStatusCheckLists (Grupo) VALUES (' +  aux + ')'
 
         ,{type:sequelize.QueryTypes.INSERT})
         .catch((error)=> {
@@ -131,7 +134,8 @@ exports.PostOut = async (data) => {
         })
     
         await 
-        Sequelize.query( 'INSERT INTO ItensCheckListModelos (Descricao, idGrupoStatusCheckList ) VALUES '
+        Sequelize.query( 
+        'INSERT INTO ItensCheckListModelos (Descricao, idGrupoStatusCheckList ) VALUES ' + "\n"
         +'(' + data.Perguntas + ',' + aux + ')'
 
         ,{type:sequelize.QueryTypes.INSERT})

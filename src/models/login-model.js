@@ -7,8 +7,8 @@ const User = sequelize.define('users', {
         type: Sequelize.STRING
     },
     email: {
-        type: Sequelize.STRING,
-        defaultValue:null
+        type: Sequelize.STRING
+        
     },
     password: {
         type: Sequelize.STRING
@@ -17,23 +17,23 @@ const User = sequelize.define('users', {
         type: Sequelize.STRING
     },
     inativo: {
-        type: Sequelize.TINYINT,
-        defaultValue:null
+        type: Sequelize.TINYINT
+        
     },
     autorizado: {
         type: Sequelize.TINYINT,
         defaultValue:'0'
     },
     unidade: {
-        type: Sequelize.STRING,
-        defaultValue:null
+        type: Sequelize.STRING
+        
     },
   
 
 });
 
 // force: Se True , Substiu a tabela existente
-User.sync({ force: false }).then(() => {
+User.sync({ force:false }).then(() => {
 
     // Retorna Tabela Criada
     return User;

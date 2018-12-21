@@ -42,6 +42,7 @@ exports.PostOut = async (req, res) => {
     try {
 
         var data = req.body
+        console.log(data)
         Repository.PostOut(data)
         res.status(200).send({
             message:"Saida cadastrada com sucesso"
