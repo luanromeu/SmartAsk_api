@@ -28,7 +28,7 @@ exports.get = async () => {
 
 exports.getByAf = async (AF) => {
 
-    let teste = [];
+    
     const result =
         await
             Sequelize.query(

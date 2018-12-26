@@ -25,33 +25,34 @@ exports.listByAF = async (req, res, next) => {
 
         let AF = req.params.AF
         console.log(AF)
-        var data = await
+        let data = await
             Repository.getByAf(AF)
+            
 
-
-        let dataRearange = data;
-        let array = [];
-        let rearangeArray = [];
-        let respostas = [];
-
-        dataRearange.forEach(res => {
-
-            let index = rearangeArray.indexOf(res.Perguntas)
-            if (index == -1) {
-
-                dataRearange.forEach(res2 => {
-                    if (res.Perguntas == res2.Perguntas) {
-
-                        if (respostas.indexOf(res2.Respostas) == -1)
-                            respostas.push(res2.Respostas)
-                    }
-                })
-
-                array.push({ perguntas: res.Perguntas, respostas: respostas })
-                rearangeArray.push(res.Perguntas);
-
-            }
-        })
+            
+            let array = [];
+            let rearangeArray = [];
+        
+        
+            data.forEach(res => {
+                let index = rearangeArray.indexOf(res.Perguntas)
+                if (index == -1) {
+                    let respostas = [];
+                    data.forEach(res2 => {
+                        if (res.Perguntas == res2.Perguntas) {
+        
+                            if (respostas.indexOf(res2.Respostas) == -1)
+                                respostas.push(res2.Respostas)
+                        }
+                    })
+        
+                    array.push({ perguntas: res.Perguntas, respostas: respostas })
+                    rearangeArray.push(res.Perguntas);
+        
+                }
+        
+        
+            })
             res.status(200).send(array)
 
     } catch (error) {
