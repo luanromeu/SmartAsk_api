@@ -5,6 +5,17 @@ const machinesmodels = require('../models/Modelos-models')
 const sequelize = require('sequelize')
 const Sequelize = require('../db')
 
+var aux;
+var resultUltimoIdGrupoStatusChecklist;
+var resultUltimoItemInseridoSaidasMaquinas;
+var resultUltimoItemInseridoCheckListModelos;
+var bosta;
+var resultUltimoIdItensCheckListModelos;
+var resultUltimoIdStatusCheckList;
+
+
+
+
 
 exports.get = async () => {
 
@@ -19,8 +30,9 @@ exports.get = async () => {
                 + 'AND COALESCE(TM.Inativo, 0) = 0 '
 
                 , { type: sequelize.QueryTypes.SELECT })
-                .catch((error) => {
-                    console.log('ERRO AO LISTAR MAQUINAS POR AF ', error)
+                .catch((e) => {
+                    console.log('ERRO AO LISTAR MAQUINAS POR AF ', e)
+                    throw new Error(e);
                 })
     return result;
 }
@@ -28,13 +40,13 @@ exports.get = async () => {
 
 exports.getByAf = async (AF) => {
 
-    
+
     const result =
         await
             Sequelize.query(
                 'SELECT Ma.CodigoExibicao, Mo.Modelo, Mo.id AS idModelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
                 + ' AM.Apelido, SC.Descricao AS Respostas, Substring(Mo.ApelidoOLD, 4, 2) AS Altura, ' + "\n"
-                + ' Ma.id' + "\n"
+                + ' Ma.id AS idMaquinas' + "\n"
                 + ' FROM CheckListModelos CM ' + "\n"
                 + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
                 + ' INNER JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
@@ -46,163 +58,294 @@ exports.getByAf = async (AF) => {
 
                 , { type: sequelize.QueryTypes.SELECT })
 
-                .catch((error) => {
-                    console.log('ERRO AO PESQUISAR MAQUINA POR AF ', error)
+                .catch((e) => {
+                    console.log('ERRO AO PESQUISAR MAQUINA POR AF ', e)
+                    throw new Error(e);
                 })
 
     return result;
 }
 
 
-exports.PostOut = async (data) => {
+
+const InsertSaidasMaquinasChecklist = async (data) => {
 
     try {
-
-
-
         await
             Sequelize.query(
                 ' INSERT INTO SaidasMaquinasCheckLists ' + "\n"
                 + ' (idMaquinas , Horimetro, Observacao) ' + "\n"
-                + ' VALUES (' + data.id + ',' + data.Horimetro + ',' + "'" + data.Observacao + "'" + ')'
+                + ' VALUES (' + data[0].idMaquinas + ',' + data[0].horimetro + ',' + "'" + data[0].observacao + "'" + ')'
 
                 , { type: sequelize.QueryTypes.INSERT })
-                .catch((error) => {
-                    console.log('ERRO AO INSERIR SaidasMaquinasCheckLists ', error)
-                    return;
+                .catch((e) => {
+                    console.log('ERRO AO INSERIR SaidasMaquinasCheckLists ', e)
+                    throw new Error(e);
                 })
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
 
+const SelectSaidasMaquinasChecklist = async () => {
 
-        const resultUltimoItemInseridoSaidasMaquinas =
+    try {
+
+        resultUltimoItemInseridoSaidasMaquinas =
             await
                 Sequelize.query('SELECT id FROM SaidasMaquinasCheckLists ORDER BY id DESC LIMIT 1 '
 
                     , { type: sequelize.QueryTypes.SELECT })
-                    .catch((error) => {
-                        console.log('ERRO AO CONSULTAR UltimoItemInseridoSaidasMaquinas ', error)
-                        return;
+
+                    .catch((e) => {
+                        console.log('ERRO AO CONSULTAR UltimoItemInseridoSaidasMaquinas ', e)
+                        throw new Error(e);
                     })
 
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+
+}
+
+const InsertCheklistModelos = async (data) => {
+
+    try {
+
         await
-            Sequelize.query('INSERT INTO CheckListModelos (idModelos) VALUES (' + data.idModelo + ')'
+            Sequelize.query('INSERT INTO CheckListModelos (idModelos) VALUES (' + data[0].idModelo + ')'
 
                 , { type: sequelize.QueryTypes.INSERT })
-                .catch((error) => {
-                    console.log('ERRO AO INSERIR InsertCheckListModelos ', error)
-                    return;
+
+                .catch((e) => {
+                    console.log('ERRO AO INSERIR InsertCheckListModelos ', e)
+                    throw new Error(e);
                 })
 
-        const resultUltimoItemInseridoCheckListModelos =
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+
+}
+
+const SelectChecklistModelos = async () => {
+    try {
+
+        resultUltimoItemInseridoCheckListModelos =
             await
                 Sequelize.query('SELECT id FROM CheckListModelos ORDER BY id DESC LIMIT 1 '
 
                     , { type: sequelize.QueryTypes.SELECT })
-                    .catch((error) => {
-                        console.log('ERRO AO CONSULTAR UltimoItemInseridoCheckListModelos ', error)
-                        return;
+                    .catch((e) => {
+                        console.log('ERRO AO CONSULTAR UltimoItemInseridoCheckListModelos ', e)
+                        throw new Error(e);
                     })
 
-        var aux;
-        const resultUltimoIdGrupoStatusChecklist =
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+
+const SelectGrupoStatusChecklist = async () => {
+    try {
+        resultUltimoIdGrupoStatusChecklist =
             await
                 Sequelize.query('SELECT Grupo FROM GruposStatusCheckLists ORDER BY Grupo DESC LIMIT 1'
 
                     , { type: sequelize.QueryTypes.SELECT })
-                    .catch((error) => {
-                        console.log('ERRO AO CONSULTAR UltimoIdGrupoStatusChecklist ', error)
-                        return;
+                    .catch((e) => {
+                        console.log('ERRO AO CONSULTAR UltimoIdGrupoStatusChecklist ', e)
+                        throw new Error(e);
                     })
 
         aux = parseInt(resultUltimoIdGrupoStatusChecklist[0].Grupo) + 1
-        console.log('UltimoIdGrupoStatusChecklist ', aux)
-        console.log('TAMANHO PERGUNTAS ', data.perguntas.keys(data.perguntas).length)
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
 
-        await
-            Sequelize.query('INSERT INTO GruposStatusCheckLists (Grupo) VALUES (' + aux + ')'
-
-                , { type: sequelize.QueryTypes.INSERT })
-                .catch((error) => {
-                    console.log('ERRO AO INSERIR InsertGrupoStatusChecklist ', error)
-                    return;
-                })
-
-
-        const resultUltimoIdGrupoStatusCheckListId =
+const SelectGrupoStatusChecklistId = async () => {
+    try {
+        bosta =
             await
                 Sequelize.query('SELECT id FROM GruposStatusCheckLists ORDER BY id DESC LIMIT 1'
 
                     , { type: sequelize.QueryTypes.SELECT })
-                    .catch((error) => {
-                        console.log('ERRO AO CONSULTAR UltimoIdGrupoStatusChecklistId ', error)
-                        return;
+                    .catch((e) => {
+                        console.log('ERRO AO CONSULTAR UltimoIdGrupoStatusChecklistId ', e)
+                        throw new Error(e);
                     })
 
-        for (let i = 0; i < data[1].length - 1; i++) {
+        aux = parseInt(resultUltimoIdGrupoStatusChecklist[0].Grupo) + 1
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
 
-            // await 
-            // Sequelize.query( 
-            // 'INSERT INTO ItensCheckListModelos (Descricao, idGrupoStatusCheckList ) VALUES ' + "\n"
-            // +'(' + data.Perguntas[i] + ',' + aux + ')'
 
-            // ,{type:sequelize.QueryTypes.INSERT})
-            // .catch((error)=> {
-            //     console.log('ERRO AO INSERIR InsertItensCheckListModelos ', error)
-            //     return;
-            // })
+const InsertGruposStatusChecklist = async () => {
+    try {
+        await
+            Sequelize.query('INSERT INTO GruposStatusCheckLists (Grupo) VALUES (' + aux + ')'
+
+                , { type: sequelize.QueryTypes.INSERT })
+
+                .catch((e) => {
+                    console.log('ERRO AO INSERIR InsertGrupoStatusChecklist ', e)
+                    throw new Error(e);
+                })
+
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+
+const InsertItensChecklistModelos = async (data) => {
+
+    try {
+
+        for (let i = 0; i < data.length; i++) {
+
+            await
+
+                Sequelize.query(
+                    'INSERT INTO ItensCheckListModelos (Descricao, idGruposStatusCheckList ) VALUES (' + "'" + data[i].perguntas + "'" + ',' + aux + ')'
+
+                    , { type: sequelize.QueryTypes.INSERT })
+                    .catch((e) => {
+                        console.log('ERRO AO INSERIR InsertItensCheckListModelos ', e)
+                        throw new Error(e);
+                    })
 
         }
 
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
 
-        const resultUltimoIdItensCheckListModelos =
+
+const InsertStatusChecklists = async (data) => {
+    try {
+        for (let i = 0; i < data.length - 1; i++) {
+            await
+                Sequelize.query('INSERT INTO StatusCheckLists (Descricao, idGruposStatusCheckList) VALUES '
+                    + ' (' + "'" + data[i].respostas + "'" + ',' + aux + ')', { type: sequelize.QueryTypes.INSERT })
+                    .catch((e) => {
+                        console.log('ERRO AO INSERIR InsertStatusCheckList ', e)
+                        throw new Error(e);
+                    })
+        }
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+
+
+const SelectItensChecklistModelos = async () => {
+    try {
+        resultUltimoIdItensCheckListModelos =
             await
                 Sequelize.query('SELECT id FROM ItensCheckListModelos ORDER BY id DESC LIMIT 1'
 
                     , { type: sequelize.QueryTypes.SELECT })
-                    .catch((error) => {
-                        console.log('ERRO AO CONSULTAR UltimoIdItensCheckListModelos ', error)
-                        return;
+                    .catch((e) => {
+                        console.log('ERRO AO CONSULTAR UltimoIdItensCheckListModelos ', e)
+                        throw new Error(e);
                     })
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
 
-        await
-            Sequelize.query('INSERT INTO StatusCheckLists (Descricao, idGrupoCheckLists) VALUES '
-                + ' (' + data.Resposta + ',' + aux + ')', { type: sequelize.QueryTypes.INSERT })
-                .catch((error) => {
-                    console.log('ERRO AO INSERIR InsertStatusCheckList ', error)
-                    return;
-                })
+const SelectStatusChecklist = async () => {
+    try {
 
-
-        const resultUltimoIdStatusCheckList =
+        resultUltimoIdStatusCheckList =
             await
                 Sequelize.query('SELECT id FROM StatusCheckLists ORDER BY id DESC LIMIT 1'
 
                     , { type: sequelize.QueryTypes.SELECT })
-                    .catch((error) => {
-                        console.log('ERRO AO CONSULTAR UltimoIdStatusCheckList ', error)
-                        return;
+                    .catch((e) => {
+                        console.log('ERRO AO CONSULTAR UltimoIdStatusCheckList ', e)
+                        throw new Error(e);
                     })
+
+
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+
+const InsertSaidasMaquinasItensChecklists = async () => {
+    try {
 
         await
             Sequelize.query(
-                'INSERT INTO SaidasMaquinasItensCheckLists (idSaidasMaquinasChekList, idItensCheckListModelos,' + "\n"
-                + ' idStatusCheckList, idGrupoStatusCheckList ) ' + "\n"
-                + ' VALUES (' + UltimoItemInseridoSaidasMaquinas + ',' + resultUltimoIdItensCheckListModelos
-                + ',' + resultUltimoIdStatusCheckList + ',' + resultUltimoIdGrupoStatusCheckListId + ')'
+                'INSERT INTO SaidasMaquinasItensCheckLists (idSaidasMaquinasCheckList, idItensCheckListModelos,' + "\n"
+                + ' idStatusCheckList, idGruposStatusCheckList ) ' + "\n"
+                + ' VALUES (' + resultUltimoItemInseridoSaidasMaquinas[0].id + ',' + resultUltimoIdItensCheckListModelos[0].id + ',' + resultUltimoIdStatusCheckList[0].id + ',' + bosta[0].id + ')'
 
                 , { type: sequelize.QueryTypes.INSERT })
-                .catch((error) => {
-                    console.log('ERRO AO INSERIR InsertSaidasMaquinasItensChecklist ', error)
-                    return;
+                .catch((e) => {
+                    console.log('ERRO AO INSERIR InsertSaidasMaquinasItensChecklist ', e)
+                    throw new Error(e);
                 })
-
-
-        return 1;
-
-    } catch (error) {
-
-        console.log(error)
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
     }
-
-
-
 }
+
+exports.PostOutmachines = async (data) => {
+    try {
+
+        Sequelize.transaction({ autocommit: true }, async (t) => {
+
+            await InsertSaidasMaquinasChecklist(data).catch((e) => { return t.rollback() })
+
+            await SelectSaidasMaquinasChecklist().catch((e) => { return t.rollback() })
+
+            await InsertCheklistModelos(data).catch((e) => { return t.rollback() })
+
+            await SelectGrupoStatusChecklist().catch((e) => { return t.rollback() })
+
+            await InsertGruposStatusChecklist().catch((e) => { return t.rollback() })
+
+            await InsertItensChecklistModelos(data).catch((e) => { return t.rollback() })
+
+            await SelectItensChecklistModelos().catch((e) => { return t.rollback() })
+
+            await InsertStatusChecklists(data).catch((e) => { return t.rollback() })
+
+            await SelectStatusChecklist().catch((e) => { return t.rollback() })
+
+            await SelectChecklistModelos().catch((e) => { return t.rollback() })
+
+            await SelectGrupoStatusChecklistId().catch((e) => { return t.rollback() })
+
+            await InsertSaidasMaquinasItensChecklists().catch((e) => { return t.rollback() })
+
+        })
+
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
