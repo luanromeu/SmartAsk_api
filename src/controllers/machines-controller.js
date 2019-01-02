@@ -28,7 +28,7 @@ exports.listByAF = async (req, res, next) => {
         console.log(AF)
         let data = await
             Repository.getByAf(AF)
-        
+
         let array = [];
         let rearangeArray = [];
 
@@ -53,14 +53,14 @@ exports.listByAF = async (req, res, next) => {
 
                 array.push({
                     perguntas: res.Perguntas, idModelo: res.idModelo,
-                    idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta:"", horimetro: "",
-                    respostas: respostas, 
+                    idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "",
+                    respostas: respostas,
                 })
 
                 rearangeArray.push(res.Perguntas);
 
             }
-         })
+        })
         res.status(200).send(array)
 
     } catch (error) {
@@ -77,8 +77,15 @@ exports.PostOut = async (req, res) => {
 
         let data = req.body
 
-        await Repository.PostOutmachines(data).catch((e) => { throw new Error(e) })
+        await Repository.PostOutmachines(data)
+            .catch((e) => { throw new Error(e) })
 
+
+
+
+
+
+            
         res.status(200).send({
             message: "Saida cadastrada com sucesso"
 

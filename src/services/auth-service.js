@@ -50,13 +50,19 @@ exports.verifyToken = function (req, res, next) {
             message: 'Access Denied'
         });
     } else {
-        jwt.verify(token, global.SALT_KEY, function (error, decoded) {
+        jwt.verify(token , global.SALT_KEY ,function (error, decoded) {
             if (error) {
                 res.status(401).json({
-                    message: 'Invalid Token'
+                    message: 'Token Invalido'
                 });
             } else {
+                console.log(decoded)
+                res.status(200).json({
+                    message: 'Token valido',
+                    decoded:decoded
+                });
                 next();
+       
             }
         });
     }

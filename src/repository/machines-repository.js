@@ -240,7 +240,7 @@ const InsertStatusChecklists = async (data) => {
         for (let i = 0; i < data.length - 1; i++) {
             await
                 Sequelize.query('INSERT INTO StatusCheckLists (Descricao, idGruposStatusCheckList) VALUES '
-                    + ' (' + "'" + data[i].respostas + "'" + ',' + aux + ')', { type: sequelize.QueryTypes.INSERT })
+                    + ' (' + "'" + data[i].resposta + "'" + ',' + aux + ')', { type: sequelize.QueryTypes.INSERT })
                     .catch((e) => {
                         console.log('ERRO AO INSERIR InsertStatusCheckList ', e)
                         throw new Error(e);
@@ -315,7 +315,7 @@ const InsertSaidasMaquinasItensChecklists = async () => {
 exports.PostOutmachines = async (data) => {
     try {
 
-        Sequelize.transaction({ autocommit: true }, async (t) => {
+        await Sequelize.transaction({ autocommit: true }, async (t) => {
 
             await InsertSaidasMaquinasChecklist(data).catch((e) => { return t.rollback() })
 
@@ -340,8 +340,8 @@ exports.PostOutmachines = async (data) => {
             await SelectGrupoStatusChecklistId().catch((e) => { return t.rollback() })
 
             await InsertSaidasMaquinasItensChecklists().catch((e) => { return t.rollback() })
-
         })
+            
 
     } catch (e) {
         console.log(e)
