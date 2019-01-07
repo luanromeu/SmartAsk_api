@@ -20,6 +20,23 @@ exports.list = async (req, res, next) => {
 
 }
 
+
+exports.listModels = async (req ,res ,next) => {
+
+    try {
+        var data =
+            await Repository.listModels()
+        res.status(200).send(data)
+    } catch (e) {
+
+        res.status(500).send({
+            message: "Falha ao processar requisição"
+        })
+        console.log(error)
+    }
+
+}
+
 exports.listByAF = async (req, res, next) => {
 
     try {
@@ -27,10 +44,10 @@ exports.listByAF = async (req, res, next) => {
         let array = [];
         let rearangeArray = [];
         let AF = req.params.AF;
-        let data = 
-        await Repository.getByAf(AF)
+        let data =
+            await Repository.getByAf(AF)
         array.push({ Altura: data[0].Altura, AF: data[0].CodigoExibicao, TipoModelo: data[0].TipoModelo })
-        
+
 
         data.forEach(res => {
 
@@ -60,7 +77,7 @@ exports.listByAF = async (req, res, next) => {
 
             }
         })
-        
+
 
         res.status(200).send(array)
 

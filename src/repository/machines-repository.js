@@ -384,10 +384,23 @@ exports.listByModel = async (Modelo) => {
                 + 'INNER JOIN ItensCheckListModelos ICM ON ICM.idChecklistModelos = CM.id' + "\n"
                 + 'INNER JOIN FotosCheckListModelos FCM ON FCM.idChecklistModelos = CM.id' + "\n"
                 + 'WHERE Mo.Modelo = ' + "'" + Modelo + "'" + "\n"
-                + 'ORDER BY Mo.Modelo ' 
+                + 'ORDER BY Mo.Modelo '
                 , { type: sequelize.QueryTypes.SELECT })
         return res;
     } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+exports.listModels = async () => {
+    try {
+        let res =
+            await Sequelize.query('SELECT Modelo FROM Modelos'
+                , { type: sequelize.QueryTypes.SELECT })
+
+                return res;
+    } catch (error) {
         console.log(e)
         throw new Error(e);
     }
