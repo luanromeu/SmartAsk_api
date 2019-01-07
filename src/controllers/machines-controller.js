@@ -24,15 +24,14 @@ exports.listByAF = async (req, res, next) => {
 
     try {
 
-        let AF = req.params.AF
-        console.log(AF)
-        let data = await
-            Repository.getByAf(AF)
-
         let array = [];
         let rearangeArray = [];
+        let AF = req.params.AF;
+        let data = 
+        await Repository.getByAf(AF)
+        array.push({ Altura: data[0].Altura, AF: data[0].CodigoExibicao, TipoModelo: data[0].TipoModelo })
+        
 
-        console.log(data)
         data.forEach(res => {
 
             let index = rearangeArray.indexOf(res.Perguntas)
@@ -52,15 +51,17 @@ exports.listByAF = async (req, res, next) => {
                 })
 
                 array.push({
-                    perguntas: res.Perguntas, idModelo: res.idModelo, Altura:res.Altura, AF:res.CodigoExibicao,
-                    TipoModelo:res.TipoModelo, idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "",
+                    perguntas: res.Perguntas, idModelo: res.idModelo,
+                    idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "",
                     respostas: respostas,
                 })
 
-                rearangeArray.push(res.Perguntas);
+                //rearangeArray.push(res.Perguntas);
 
             }
         })
+        
+
         res.status(200).send(array)
 
     } catch (error) {
@@ -95,16 +96,16 @@ exports.listByModel = async (req, res, next) => {
                         if (perguntas.indexOf(res2.Descricao) == -1) {
 
                             perguntas.push(res2.Descricao)
-                            
+
                         }
                     }
-                    
+
                 })
-              
+
             }
-          
-        })  
-        array.push({ Modelo:modelo, Perguntas: perguntas })
+
+        })
+        array.push({ Modelo: modelo, Perguntas: perguntas })
 
         res.status(200).send(array)
     } catch (e) {
