@@ -56,7 +56,7 @@ exports.listByAF = async (req, res, next) => {
                     respostas: respostas,
                 })
 
-                //rearangeArray.push(res.Perguntas);
+                rearangeArray.push(res.Perguntas);
 
             }
         })
