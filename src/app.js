@@ -51,8 +51,9 @@ const Empresas = require ('../src/models/Empresa-models')
 const loginroute = require ('../src/routes/login-routes')
 const machinesroute = require ('../src/routes/machines-routes')
 const empresaroute = require ('../src/routes/empresa-routes')
+const descriptionroute = require ('../src/routes/description-routes')
 app.use('/login', loginroute)
 app.use('/machines', machinesroute )
 app.use('/business', empresaroute)
-
+app.use('/description', descriptionroute)
 module.exports = app;

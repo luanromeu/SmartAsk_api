@@ -46,7 +46,7 @@ exports.getByAf = async (AF) => {
             Sequelize.query(
                 'SELECT Ma.CodigoExibicao, Mo.Modelo, Mo.id AS idModelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
                 + ' AM.Apelido, SC.Descricao AS Respostas, Substring(Mo.ApelidoOLD, 4, 2) AS Altura, ' + "\n"
-                + ' Ma.id AS idMaquinas' + "\n"
+                + ' Ma.id AS idMaquinas , TM.TipoModelo' + "\n"
                 + ' FROM CheckListModelos CM ' + "\n"
                 + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
                 + ' INNER JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
@@ -54,6 +54,7 @@ exports.getByAf = async (AF) => {
                 + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
                 + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
                 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
+                + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
                 + ' WHERE Ma.CodigoExibicao = ' + AF
 
                 , { type: sequelize.QueryTypes.SELECT })
@@ -341,8 +342,51 @@ exports.PostOutmachines = async (data) => {
 
             await InsertSaidasMaquinasItensChecklists().catch((e) => { return t.rollback() })
         })
-            
 
+
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+
+exports.listMachinesOut = async (AF) => {
+    try {
+        let res =
+            await Sequelize.query(' SELECT * FROM  SaidasMaquinasCheckLists SMC ' + "\n"
+                + 'INNER JOIN SaidasMaquinasItensCheckLists SMIC ON SMIC.idSaidasMaquinasCheckList = SMC.id' + "\n"
+                + 'INNER JOIN StatusCheckLists SCL ON SMIC.idStatusCheckList = SCL.id' + "\n"
+                + 'INNER JOIN GruposStatusCheckLists GSC ON SCL.idGruposStatusCheckList = GSC.id' + "\n"
+                + 'INNER JOIN ItensCheckListModelos ICM ON ICM.idGruposStatusCheckList = GSC.id' + "\n"
+                + 'INNER JOIN CheckListModelos CM ON ICM.idCheckListModelos = CM.id' + "\n"
+                + 'INNER JOIN FotosCheckListModelos FCM ON FCM.idCheckListModelos = CM.id' + "\n"
+                + 'INNER JOIN SaidasMaquinasFotosCheckLists SMFC ON SMFC.idFotosCheckListModelos = FCM.id ' + "\n"
+                + 'INNER JOIN SaidasMaquinasItensFotosCheckLists SMIFC ON SMFC.idSaidasMaquinasCheckList = SMIFC.id' + "\n"
+                + 'INNER JOIN Maquinas Ma ON SMC.idMaquinas = Ma.id' + "\n"
+                + 'INNER JOIN Modelos Mo ON Ma.idModelos = Mo.id' + "\n"
+                + 'WHERE Ma.CodigoExibicao  = ' + AF
+                , { type: sequelize.QueryTypes.SELECT })
+
+        return res;
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+exports.listByModel = async (Modelo) => {
+    try {
+        let res =
+            await Sequelize.query('SELECT Mo.Modelo, FCM.Descricao , FCM.Ordem' + "\n"
+                + 'FROM Modelos Mo ' + "\n"
+                + 'INNER JOIN CheckListModelos CM ON CM.idModelos = Mo.id' + "\n"
+                + 'INNER JOIN ItensCheckListModelos ICM ON ICM.idChecklistModelos = CM.id' + "\n"
+                + 'INNER JOIN FotosCheckListModelos FCM ON FCM.idChecklistModelos = CM.id' + "\n"
+                + 'WHERE Mo.Modelo = ' + "'" + Modelo + "'" + "\n"
+                + 'ORDER BY Mo.Modelo ' 
+                , { type: sequelize.QueryTypes.SELECT })
+        return res;
     } catch (e) {
         console.log(e)
         throw new Error(e);
