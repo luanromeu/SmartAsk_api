@@ -57,7 +57,7 @@ exports.authenticate = async(req, res, next) => {
                 data: {
                     user: user.user,
                     password: user.password,
-                    role: user.role,
+                    role: md5(user.role),
                     email:user.email,
                     autorizado:user.autorizado
                     

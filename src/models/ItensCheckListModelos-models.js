@@ -11,6 +11,10 @@ const ItensCheckListModelos = sequelize.define('ItensCheckListModelos', {
         type:Sequelize.STRING,
         defaultValue:null
     },
+    Ordem:{
+        type:Sequelize.INTEGER,
+        defaultValue:null
+    },
     Inativo: {
         type: Sequelize.TINYINT,
         defaultValue: null,

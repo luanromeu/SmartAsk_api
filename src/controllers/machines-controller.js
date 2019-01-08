@@ -122,7 +122,7 @@ exports.listByModel = async (req, res, next) => {
             }
 
         })
-        array.push({ Modelo: modelo, Perguntas: perguntas })
+        array.push({ Modelo: modelo ,Items: perguntas })
 
         res.status(200).send(array)
     } catch (e) {
