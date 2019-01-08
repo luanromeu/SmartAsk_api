@@ -124,7 +124,7 @@ exports.listByModel = async (req, res, next) => {
         })
         array.push({ Modelo: modelo ,Items: perguntas })
 
-        res.status(200).send(array)
+        res.status(200).send(data)
     } catch (e) {
         console.log(e)
         res.status(500).send({

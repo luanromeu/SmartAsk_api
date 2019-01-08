@@ -48,7 +48,7 @@ exports.authenticate = async(req, res, next) => {
             const token = await authService.generateToken({
                 id: user.id,
                 user: user.user,
-                role: user.role,
+                role: md5(user.role),
                 email:user.email,
                 autorizado:user.autorizado
             });
