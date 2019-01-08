@@ -5,6 +5,7 @@ const user = require('../../src/models/login-model')
 
 exports.create = async (data) => {
 
+    
     let User = user.build(data);
 
     const res = await User.save();
