@@ -388,7 +388,7 @@ exports.listByModel = async (Modelo) => {
                 + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
                 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
                 + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
-                + ' WHERE Mo.Modelo = ' + "'" + Modelo + "'" +''
+                + ' WHERE Mo.Modelo = ' + "'" + Modelo + "'" +' ORDER BY ICM.Ordem'
                 , { type: sequelize.QueryTypes.SELECT })
         return res;
     } catch (e) {
