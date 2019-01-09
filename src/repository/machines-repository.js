@@ -55,7 +55,7 @@ exports.getByAf = async (AF) => {
                 + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
                 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
                 + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
-                + ' WHERE Ma.CodigoExibicao = ' + AF
+                + ' WHERE Ma.CodigoExibicao = ' + AF + ' ORDER BY ICM.Ordem'
 
                 , { type: sequelize.QueryTypes.SELECT })
 
