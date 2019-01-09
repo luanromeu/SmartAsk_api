@@ -46,7 +46,7 @@ exports.listByAF = async (req, res, next) => {
         let AF = req.params.AF;
         let data =
             await Repository.getByAf(AF)
-        array.push({ Altura: data[0].Altura, AF: data[0].CodigoExibicao, TipoModelo: data[0].TipoModelo })
+        array.push({ Altura: data[0].Altura, AF: data[0].CodigoExibicao, TipoModelo: data[0].TipoModelo , Modelo: data[0].Modelo })
 
 
         data.forEach(res => {
@@ -69,7 +69,7 @@ exports.listByAF = async (req, res, next) => {
 
                 array.push({
                     perguntas: res.Perguntas, idModelo: res.idModelo,
-                    idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "", Modelo:res.Modelo,
+                    idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "",
                     respostas: respostas,
                 })
 
