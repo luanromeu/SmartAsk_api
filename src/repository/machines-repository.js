@@ -22,8 +22,8 @@ exports.get = async () => {
     const result =
         await
             Sequelize.query(
-                'SELECT Ma.CodigoExibicao as AF, TM.TipoModelo, Substring(Mo.ApelidoOLD, 4, 2) as Altura ' + "\n"
-                + 'FROM Modelos Mo ' + "\n"
+                'SELECT Mo.Modelo ,Ma.CodigoExibicao as AF, TM.TipoModelo, Substring(Mo.ApelidoOLD, 4, 2) as Altura ' + "\n"
+                + ' FROM Modelos Mo ' + "\n"
                 + 'INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
                 + 'INNER JOIN TiposModelos TM ON Mo.idTiposModelos = TM.id ' + "\n"
                 + 'WHERE COALESCE(Mo.Inativo, 0) = 0 AND COALESCE(Ma.Inativo, 0) = 0 ' + "\n"
@@ -44,7 +44,7 @@ exports.getByAf = async (AF) => {
     const result =
         await
             Sequelize.query(
-                'SELECT Ma.CodigoExibicao, Mo.Modelo, Mo.id AS idModelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
+                'SELECT Ma.CodigoExibicao, Mo.Modelo , Mo.id AS idModelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
                 + ' AM.Apelido, SC.Descricao AS Respostas, Substring(Mo.ApelidoOLD, 4, 2) AS Altura, ' + "\n"
                 + ' Ma.id AS idMaquinas , TM.TipoModelo' + "\n"
                 + ' FROM CheckListModelos CM ' + "\n"

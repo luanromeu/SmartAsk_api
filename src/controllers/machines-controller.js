@@ -69,7 +69,7 @@ exports.listByAF = async (req, res, next) => {
 
                 array.push({
                     perguntas: res.Perguntas, idModelo: res.idModelo,
-                    idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "",
+                    idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "", Modelo:res.Modelo,
                     respostas: respostas,
                 })
 
