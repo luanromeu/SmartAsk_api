@@ -123,6 +123,25 @@ exports.listByModel = async (req, res, next) => {
     }
 }
 
+exports.PutOrderModel = async (req, res, next) => {
+    try {
+        let object = req.body
+        
+        for ( let i = 0; i < object.length; i++){
+           
+             await Repository.PutOrderModel(object[i] , i)
+            
+        }
+        
+       res.status(200).send({message:"Ordem Alterada Com sucesso"});
+       
+    } catch (e) {
+         console.log(e)
+        res.status(500).send({
+            message: "Falha ao processar requisição"
+        })
+    }
+}
 exports.PostOut = async (req, res) => {
 
     try {

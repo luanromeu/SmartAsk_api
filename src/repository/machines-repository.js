@@ -399,8 +399,22 @@ exports.listModels = async () => {
             await Sequelize.query('SELECT Modelo FROM Modelos'
                 , { type: sequelize.QueryTypes.SELECT })
 
-                return res;
+        return res;
     } catch (error) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+exports.PutOrderModel = async (object , position) => {
+    try {
+        let res =
+            await Sequelize.query(
+                'UPDATE ItensCheckListModelos SET Ordem = ' + position + ' ' + "\n" 
+               +'WHERE Descricao ='  + "'" + object + "'" + ''  
+                , { type: sequelize.QueryTypes.INSERT })
+        return res;
+    } catch (e) {
         console.log(e)
         throw new Error(e);
     }

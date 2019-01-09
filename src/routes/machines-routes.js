@@ -7,7 +7,8 @@ const authService = require('../../src/services/auth-service');
 
 router.get('/list', authService.authorize,controller.list)
 router.get('/listaf/:AF', authService.authorize, controller.listByAF)
-router.post('/outmachines', authService.authorize, controller.PostOut)
+router.put('/outmachines', authService.authorize, controller.PostOut)
+router.post('/ordermodels', authService.authorize, controller.PutOrderModel)
 router.get('/listmachinesout/:AF', authService.authorize, controller.listMachinesOut)
 router.get('/listmodels',authService.authorize, controller.listModels)
 router.get('/listmodel/:Modelo', controller.listByModel)
