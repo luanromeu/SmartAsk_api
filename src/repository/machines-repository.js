@@ -378,13 +378,17 @@ exports.listMachinesOut = async (AF) => {
 exports.listByModel = async (Modelo) => {
     try {
         let res =
-            await Sequelize.query('SELECT   ICM.Ordem , ICM.Descricao' + "\n"
-                + 'FROM Modelos Mo ' + "\n"
-                + 'INNER JOIN CheckListModelos CM ON CM.idModelos = Mo.id' + "\n"
-                + 'INNER JOIN ItensCheckListModelos ICM ON ICM.idChecklistModelos = CM.id' + "\n"
-                + 'INNER JOIN FotosCheckListModelos FCM ON FCM.idChecklistModelos = CM.id' + "\n"
-                + 'WHERE Mo.Modelo = ' + "'" + Modelo + "'" + "\n"
-                + 'ORDER BY ICM.Ordem'
+            await Sequelize.query(
+                'SELECT  ICM.Descricao AS Perguntas' + "\n"
+                + ' FROM CheckListModelos CM ' + "\n"
+                + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
+                + ' INNER JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
+                + ' INNER JOIN GruposStatusCheckLists GSC ON GSC.id = ICM.idGruposStatusCheckList ' + "\n"
+                + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
+                + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
+                + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
+                + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
+                + ' WHERE Mo.Modelo = ' + "'" + Modelo + "'" +''
                 , { type: sequelize.QueryTypes.SELECT })
         return res;
     } catch (e) {

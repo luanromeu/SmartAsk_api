@@ -104,8 +104,8 @@ exports.listByModel = async (req, res, next) => {
         function removeDuplicates(arr){
             
             for(let i = 0;i < arr.length; i++){
-                if(array.indexOf(arr[i].Descricao) == -1){
-                    array.push(arr[i].Descricao)
+                if(array.indexOf(arr[i].Perguntas) == -1){
+                    array.push(arr[i].Perguntas)
                 }
             }
             console.log(array);
