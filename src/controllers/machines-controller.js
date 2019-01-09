@@ -21,7 +21,7 @@ exports.list = async (req, res, next) => {
 }
 
 
-exports.listModels = async (req ,res ,next) => {
+exports.listModels = async (req, res, next) => {
 
     try {
         var data =
@@ -97,34 +97,24 @@ exports.listByModel = async (req, res, next) => {
         var data =
             await Repository.listByModel(Modelo)
 
-        let perguntas = [];
-        let modelo;
+        
         let array = [];
-
-
-        await data.forEach(res => {
-
-            if (data.indexOf(res.Descricao) == -1) {
-                modelo = res.Modelo;
-                data.forEach(res2 => {
-
-                    if (res.Descricao == res2.Descricao) {
-
-                        if (perguntas.indexOf(res2.Descricao) == -1) {
-
-                            perguntas.push(res2.Descricao)
-
-                        }
-                    }
-
-                })
-
+        
+        
+        function removeDuplicates(arr){
+            
+            for(let i = 0;i < arr.length; i++){
+                if(array.indexOf(arr[i].Descricao) == -1){
+                    array.push(arr[i].Descricao)
+                }
             }
+            console.log(array);
+            return array
+        }
+       
+        removeDuplicates(data)
+        res.status(200).send(array)
 
-        })
-        array.push({ Modelo: modelo ,Items: perguntas })
-
-        res.status(200).send(data)
     } catch (e) {
         console.log(e)
         res.status(500).send({

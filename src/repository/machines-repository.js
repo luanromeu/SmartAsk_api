@@ -378,13 +378,13 @@ exports.listMachinesOut = async (AF) => {
 exports.listByModel = async (Modelo) => {
     try {
         let res =
-            await Sequelize.query('SELECT Mo.Modelo,  ICM.Ordem , ICM.Descricao' + "\n"
+            await Sequelize.query('SELECT   ICM.Ordem , ICM.Descricao' + "\n"
                 + 'FROM Modelos Mo ' + "\n"
                 + 'INNER JOIN CheckListModelos CM ON CM.idModelos = Mo.id' + "\n"
                 + 'INNER JOIN ItensCheckListModelos ICM ON ICM.idChecklistModelos = CM.id' + "\n"
                 + 'INNER JOIN FotosCheckListModelos FCM ON FCM.idChecklistModelos = CM.id' + "\n"
                 + 'WHERE Mo.Modelo = ' + "'" + Modelo + "'" + "\n"
-                + 'ORDER BY Mo.Modelo '
+                + 'ORDER BY ICM.Ordem'
                 , { type: sequelize.QueryTypes.SELECT })
         return res;
     } catch (e) {
