@@ -66,9 +66,9 @@ exports.listByAF = async (req, res, next) => {
 
                     }
                 })
-
+                let fotos = []
                 array.push({
-                    perguntas: res.Perguntas, idModelo: res.idModelo,
+                    perguntas: res.Perguntas, idModelo: res.idModelo,fotos:fotos,
                     idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "",
                     respostas: respostas,
                 })
