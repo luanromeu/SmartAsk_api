@@ -4,6 +4,8 @@ const machines = require('../models/Maquinas-models')
 const machinesmodels = require('../models/Modelos-models')
 const sequelize = require('sequelize')
 const Sequelize = require('../db')
+const base64ToImage = require('base64-to-image');
+const ftp = require('../services/ftp-service')
 
 var aux;
 var resultUltimoIdGrupoStatusChecklist;
@@ -12,8 +14,10 @@ var resultUltimoItemInseridoCheckListModelos;
 var bosta;
 var resultUltimoIdItensCheckListModelos;
 var resultUltimoIdStatusCheckList;
-
-
+var resultUltimoIdImages;
+var resultimage = null;
+var resultsend = null;
+var arrayImages = [];
 
 
 
@@ -313,6 +317,81 @@ const InsertSaidasMaquinasItensChecklists = async () => {
     }
 }
 
+const SendImagesToWeb = async (data, localpath, remotepath, optionalObj) => {
+    let string = 'http://api.tetsistemas.com.br/checklist/';
+    try {
+
+        data.forEach(async res => {
+            if (res.fotos != null || res.fotos != "" || res.fotos.length != 0)
+                await res.fotos.forEach(async base64Str => {
+                    if (base64Str != null || base64Str.length != 0 || base64Str != "")
+                        console.log(base64Str.length)
+                    resultimage = base64ToImage(base64Str, localpath, optionalObj)
+                    resultsend = ftp.SendToServer(localpath + resultimage.fileName, remotepath + resultimage.fileName)
+                    console.log(resultimage)
+                    arrayImages.push(resultimage);
+                    return arrayImages;
+                })
+
+        })
+        //console.log(arrayImages.length)
+        return arrayImages
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+const InsertImages = async () => {
+    try {
+        await Sequelize.query(
+            'INSERT INTO SaidasMaquinasFotosCheckLists (idSaidasMaquinasCheckList)' + "\n"
+            + 'VLAUES(' + resultUltimoItemInseridoSaidasMaquinas[0].id + ')'
+            , { type: sequelize.QueryTypes.INSERT })
+    } catch (e) {
+
+    }
+}
+
+const SelectSaidasMaquinasFotosChecklists = async () => {
+    try {
+
+        resultUltimoIdImages =
+            await
+                Sequelize.query('SELECT id FROM SaidasMaquinasFotosCheckLists ORDER BY id DESC LIMIT 1'
+
+                    , { type: sequelize.QueryTypes.SELECT })
+                    .catch((e) => {
+                        console.log('ERRO AO CONSULTAR UltimoIdStatusCheckList ', e)
+                        throw new Error(e);
+                    })
+
+
+    } catch (e) {
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+const SaidasMaquinasItensFotosCheckLists = async (arrayImages) => {
+    try {
+        //console.log(arrayImages.length)
+        for (let i = 0; i < arrayImages.length; i++) {
+
+            await Sequelize.query(
+                'INSERT INTO SaidasMaquinasItensFotosCheckLists (idSaidasMaquinasFotosCheckList , imagem)' + "\n"
+                + 'VALUES(' + resultUltimoIdImages[0].id + ',' + "'" + arrayImages[i].fileName + "'" + ')'
+                , { type: sequelize.QueryTypes.INSERT })
+        }
+
+    } catch (e) {
+
+    }
+}
+
+
+
+
 exports.PostOutmachines = async (data) => {
     try {
 
@@ -341,8 +420,15 @@ exports.PostOutmachines = async (data) => {
             await SelectGrupoStatusChecklistId().catch((e) => { return t.rollback() })
 
             await InsertSaidasMaquinasItensChecklists().catch((e) => { return t.rollback() })
-        })
 
+            await SendImagesToWeb(data, '/home/luan/Desktop/', '/checklist/', { type: 'jpg' }).catch((e) => { return t.rollback() })
+
+            await SelectSaidasMaquinasFotosChecklists().catch(() => { return t.rollback() })
+
+            await InsertImages().catch((e) => { return t.rollback() })
+
+            await SaidasMaquinasItensFotosCheckLists(arrayImages).catch((e) => { return t.rollback() })
+        })
 
     } catch (e) {
         console.log(e)
@@ -388,7 +474,7 @@ exports.listByModel = async (Modelo) => {
                 + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
                 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
                 + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
-                + ' WHERE Mo.Modelo = ' + "'" + Modelo + "'" +' ORDER BY ICM.Ordem'
+                + ' WHERE Mo.Modelo = ' + "'" + Modelo + "'" + ' ORDER BY ICM.Ordem'
                 , { type: sequelize.QueryTypes.SELECT })
         return res;
     } catch (e) {
@@ -410,12 +496,12 @@ exports.listModels = async () => {
     }
 }
 
-exports.PutOrderModel = async (object , position) => {
+exports.PutOrderModel = async (object, position) => {
     try {
         let res =
             await Sequelize.query(
-                'UPDATE ItensCheckListModelos SET Ordem = ' + position + ' ' + "\n" 
-               +'WHERE Descricao ='  + "'" + object + "'" + ''  
+                'UPDATE ItensCheckListModelos SET Ordem = ' + position + ' ' + "\n"
+                + 'WHERE Descricao =' + "'" + object + "'" + ''
                 , { type: sequelize.QueryTypes.INSERT })
         return res;
     } catch (e) {

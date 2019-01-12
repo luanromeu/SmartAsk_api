@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "base64-to-image": "^1.0.2",
     "express": "^4.16.4",
     "ftp-client": "^0.2.2",
     "http": "0.0.0",

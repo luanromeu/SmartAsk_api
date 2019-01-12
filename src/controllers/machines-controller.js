@@ -151,8 +151,8 @@ exports.PostOut = async (req, res) => {
         await Repository.PostOutmachines(data)
             .catch((e) => { throw new Error(e) })
         res.status(200).send({
-            message: "Saida cadastrada com sucesso"
-
+            message: "Saida cadastrada com sucesso",
+            
         })
 
     } catch (error) {

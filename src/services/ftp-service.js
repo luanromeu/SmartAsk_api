@@ -47,7 +47,14 @@ exports.CreateDirectory = async (namedir) => {
 
 
 exports.SendToServer = async (localfile, remotepath) => {
-
+    
+    const Ftp = new jsftp({
+        host: 'imagens.tetsistemas.com.br',
+        port: 21,
+        user: 'tetsistemas_imagens',
+        pass: 'T&TSistemas2007',
+    
+    }) 
     
    await Ftp.put(localfile, remotepath, (err) => {
 
@@ -62,7 +69,7 @@ exports.SendToServer = async (localfile, remotepath) => {
             })
         }
         else
-            console.log('Arquivo Transferido com sucesso');
+            return console.log('Arquivo Transferido com sucesso', localfile);
 
     })
 }
