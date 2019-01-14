@@ -422,7 +422,7 @@ exports.PostOutmachines = async (data) => {
 
             await InsertSaidasMaquinasItensChecklists().catch((e) => { return t.rollback() })
 
-            await SendImagesToWeb(data, '/checklist/', '/checklist/', { type: 'jpg' }).catch((e) => { return t.rollback() })
+            await SendImagesToWeb(data, '/home/tetsistemas/web/imagens.tetsistemas.com.br/public_html/checklist/', '/checklist/', { type: 'jpg' }).catch((e) => { return t.rollback() })
 
             await SelectSaidasMaquinasFotosChecklists().catch(() => { return t.rollback() })
 
