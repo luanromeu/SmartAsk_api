@@ -19,26 +19,70 @@ var resultimage = null;
 var resultsend = null;
 var arrayImages = [];
 
+exports.listOutChecklists = async (filterOption, filterParam) => {
+    const result =
+        await Sequelize.query(
+     'SELECT SMC.id AS NumeroCheckList, SMC.Data, Ma.CodigoExibicao, TP.TipoModelo ' + "\n"
+    +'FROM SaidasMaquinasCheckLists SMC' + "\n"
+    +'INNER JOIN  Maquinas Ma ON SMC.idMaquinas = Ma.id' + "\n"
+    +'INNER JOIN Modelos Mo ON Ma.idModelos = Mo.id' + "\n"
+    +'INNER JOIN TiposModelos TP ON Mo.idTiposModelos = TP.id' + "\n"
+    +'WHERE '+ filterOption + ' = '+ "'" + filterParam + "'" +'  ORDER BY SMC.Data'
+            , { type: sequelize.QueryTypes.SELECT })
+            .catch((e) => {
+                console.log('ERRO AO LISTAR CHECKLISTS ', e)
+                throw new Error(e);
+            })
+            return result;
+}
 
+exports.listOutChecklistsDate = async ( startDate, endDate, filterOption) => {
+    const result =
+        await Sequelize.query(
+     'SELECT SMC.id AS NumeroCheckList, SMC.Data, Ma.CodigoExibicao, TP.TipoModelo ' + "\n"
+    +'FROM SaidasMaquinasCheckLists SMC' + "\n"
+    +'INNER JOIN  Maquinas Ma ON SMC.idMaquinas = Ma.id' + "\n"
+    +'INNER JOIN Modelos Mo ON Ma.idModelos = Mo.id' + "\n"
+    +'INNER JOIN TiposModelos TP ON Mo.idTiposModelos = TP.id' + "\n"
+    +'WHERE '+ filterOption + ' >= ' + "'" + startDate + "'" + ' AND ' + filterOption + ' <= ' + "'" + endDate + "'" + '' +"\n"
+    +' ORDER BY SMC.Data'
+            , { type: sequelize.QueryTypes.SELECT })
+            .catch((e) => {
+                console.log('ERRO AO LISTAR CHECKLISTS POR DATA ', e)
+                throw new Error(e);
+            })
+            return result;
+}
 
-exports.get = async () => {
+exports.listOutChecklistItens = async (filterOption, filterParam) => {
 
     const result =
-        await
-            Sequelize.query(
-                'SELECT Mo.Modelo ,Ma.CodigoExibicao as AF, TM.TipoModelo, Substring(Mo.ApelidoOLD, 4, 2) as Altura ' + "\n"
-                + ' FROM Modelos Mo ' + "\n"
-                + 'INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
-                + 'INNER JOIN TiposModelos TM ON Mo.idTiposModelos = TM.id ' + "\n"
-                + 'WHERE COALESCE(Mo.Inativo, 0) = 0 AND COALESCE(Ma.Inativo, 0) = 0 ' + "\n"
-                + 'AND COALESCE(TM.Inativo, 0) = 0 '
+        await Sequelize.query(
+            'SELECT Ma.CodigoExibicao , TP.TipoModelo , Right(Mo.ApelidoOLD, 2) AS Altura , ICM.Descricao AS Perguntas,' + "\n"
+            + 'SC.Descricao AS Respostas , SMC.createdAt' + "\n"
+            + 'FROM SaidasMaquinasItensCheckLists SMICL' + "\n"
+            + 'INNER JOIN SaidasMaquinasCheckLists SMC ON SMICL.idSaidasMaquinasCheckList = SMC.id' + "\n"
+            + 'INNER JOIN Maquinas Ma ON SMC.idMaquinas = Ma.id' + "\n"
+            + 'INNER JOIN Modelos Mo ON Ma.idModelos = Mo.id' + "\n"
+            + 'INNER JOIN CheckListModelos CM ON CM.idModelos = Mo.id' + "\n"
+            + 'INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id' + "\n"
+            + 'INNER JOIN GruposStatusCheckLists GSC ON ICM.idGruposStatusCheckList = GSC.id' + "\n"
+            + 'INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id' + "\n"
+            + 'INNER JOIN TiposModelos TP ON Mo.idTiposModelos = TP.id' + "\n"
+            + 'LEFT JOIN SaidasMaquinasFotosCheckLists SMFC ON SMFC.idSaidasMaquinasCheckList = SMC.id' + "\n"
+            + 'LEFT JOIN SaidasMaquinasItensFotosCheckLists SMIFC ON SMIFC.idSaidasMaquinasFotosCheckList = SMFC.id' + "\n"
+            + 'WHERE ' + filterOption + ' = ' + filterParam + ' '
 
-                , { type: sequelize.QueryTypes.SELECT })
-                .catch((e) => {
-                    console.log('ERRO AO LISTAR MAQUINAS POR AF ', e)
-                    throw new Error(e);
-                })
+            , { type: sequelize.QueryTypes.SELECT })
+            .catch((e) => {
+                console.log('ERRO AO LISTAR SAIDA DE MAQUINAS ', e)
+                throw new Error(e);
+            })
+    // console.log(result)
+
     return result;
+
+
 }
 
 
@@ -53,8 +97,8 @@ exports.getByAf = async (AF) => {
                 + ' Ma.id AS idMaquinas , TM.TipoModelo' + "\n"
                 + ' FROM CheckListModelos CM ' + "\n"
                 + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
-                + ' INNER JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
-                + ' INNER JOIN GruposStatusCheckLists GSC ON GSC.id = ICM.idGruposStatusCheckList ' + "\n"
+                + ' LEFT JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
+                + ' LEFT JOIN GruposStatusCheckLists GSC ON GSC.id = ICM.idGruposStatusCheckList ' + "\n"
                 + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
                 + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
                 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
@@ -358,7 +402,7 @@ const SaidasMaquinasItensFotosCheckLists = async (arrayImages) => {
 
             await Sequelize.query(
                 'INSERT INTO SaidasMaquinasItensFotosCheckLists (idSaidasMaquinasFotosCheckList , imagem)' + "\n"
-                + 'VALUES(' + resultUltimoIdImages[0].id + ',' + "'" +  string +  arrayImages[i].fileName + "'" + ')'
+                + 'VALUES(' + resultUltimoIdImages[0].id + ',' + "'" + string + arrayImages[i].fileName + "'" + ')'
                 , { type: sequelize.QueryTypes.INSERT })
         }
 
@@ -368,7 +412,7 @@ const SaidasMaquinasItensFotosCheckLists = async (arrayImages) => {
 }
 
 const SendImagesToWeb = async (data, localpath, remotepath, optionalObj) => {
-    
+
     try {
 
         data.forEach(async res => {
@@ -377,7 +421,7 @@ const SendImagesToWeb = async (data, localpath, remotepath, optionalObj) => {
                     if (base64Str != null || base64Str.length != 0 || base64Str != "")
                         console.log(base64Str.length)
                     resultimage = base64ToImage(base64Str, localpath, optionalObj)
-                    //resultsend = ftp.SendToServer(localpath + resultimage.fileName, remotepath + resultimage.fileName)
+                    resultsend = ftp.SendToServer(localpath + resultimage.fileName, remotepath + resultimage.fileName)
                     console.log(resultimage)
                     arrayImages.push(resultimage);
                     return arrayImages;
@@ -422,7 +466,7 @@ exports.PostOutmachines = async (data) => {
 
             await InsertSaidasMaquinasItensChecklists().catch((e) => { return t.rollback() })
 
-            await SendImagesToWeb(data, '/home/tetsistemas/web/imagens.tetsistemas.com.br/public_html/checklist/', '/checklist/', { type: 'jpg' }).catch((e) => { return t.rollback() })
+            await SendImagesToWeb(data, '/home/luan/Desktop', '/checklist/', { type: 'jpg' }).catch((e) => { return t.rollback() })
 
             await SelectSaidasMaquinasFotosChecklists().catch(() => { return t.rollback() })
 

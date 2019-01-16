@@ -7,8 +7,8 @@ const sequelize = new Sequelize('tetsiste_checklist', 'tetsistemas_t', 'T&TSiste
   dialect: 'mysql',
   operatorsAliases: false,
   timezone: '-03:00', // for writing to database
-
-});
+  connectionTimeout:10000,
+ });
 
 sequelize
   .authenticate()
