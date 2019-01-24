@@ -84,3 +84,21 @@ exports.NewQuiz = async(req, res, next) => {
         throw new Error(e)
     }
 }
+
+
+exports.deleteQuiz = async (req, res, next) => {
+
+    try {
+        
+        let id = req.body.id || req.params.id
+        let data = 
+            await Repository.deleteQuiz(id)
+        res.status(200).send({
+            message:"Questionario Deletado com Sucessos"
+        })
+    } catch (e) {
+       
+        console.log(e)
+        throw new Error(e)
+    }
+}

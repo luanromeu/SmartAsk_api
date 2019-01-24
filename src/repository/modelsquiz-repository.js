@@ -27,3 +27,4 @@ exports.addNewModel = async (object) => {
 
     }
 }
+
