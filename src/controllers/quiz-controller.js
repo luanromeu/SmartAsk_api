@@ -26,7 +26,8 @@ exports.QuizDetails = async (req, res, next) => {
     try {
 
         let array = []
-        let perguntas = []
+        let questions = []
+        let models = []
         let idQuiz = req.params.id;
 
         let data =
@@ -34,7 +35,7 @@ exports.QuizDetails = async (req, res, next) => {
 
             data.forEach(result => {
 
-                perguntas.push(result.Perguntas)
+                questions.push(result.Perguntas)
 
                 let index = data.indexOf(result.Modelo)
 
@@ -44,9 +45,9 @@ exports.QuizDetails = async (req, res, next) => {
                                   
                                if ( result.Modelo == result2.Modelo){
                                      
-                                    if (array.indexOf(result2.Modelo) == -1){
+                                    if (models.indexOf(result2.Modelo) == -1){
                                         
-                                        array.push(result2.Modelo)
+                                        models.push(result2.Modelo)
                                     }
                                 }
                              })
@@ -54,8 +55,8 @@ exports.QuizDetails = async (req, res, next) => {
                         }
                  });
 
-                 
-                 array.push(perguntas)
+                 array.push(models)
+                 array.push(questions)
 
         res.status(200).send(array)
 

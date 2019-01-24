@@ -18,6 +18,8 @@ exports.listQuiz = async () => {
                     {Inativo: null}
                     )
             })
+
+           
         return res
 
     } catch (e) {
