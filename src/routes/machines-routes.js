@@ -6,7 +6,7 @@ const controller = require('../controllers/machines-controller');
 const authService = require('../../src/services/auth-service');
 
 router.get('/listOutChecklists/:filterOption', authService.authorize, controller.listOutChecklists)
-router.get('/listOutChecklistItens/:filterOption/:filterParam', controller.listOutChecklistItens)
+router.get('/listOutChecklistItens/:filterParam', controller.listOutChecklistItens)
 router.get('/listaf/:AF', authService.authorize, controller.listByAF)
 router.post('/outmachines', authService.authorize, controller.PostOut)
 router.put('/ordermodels', authService.authorize, controller.PutOrderModel)

@@ -8,7 +8,7 @@ exports.create = async (data) => {
     
     let User = user.build(data);
 
-    const res = await User.save();
+    const res = await User.save();  
 
     return res;
 

@@ -54,7 +54,7 @@ exports.listOutChecklistsDate = async ( startDate, endDate, filterOption) => {
             return result;
 }
 
-exports.listOutChecklistItens = async (filterOption, filterParam) => {
+exports.listOutChecklistItens = async ( filterParam) => {
 
     const result =
         await Sequelize.query(
@@ -71,7 +71,7 @@ exports.listOutChecklistItens = async (filterOption, filterParam) => {
             + 'INNER JOIN TiposModelos TP ON Mo.idTiposModelos = TP.id' + "\n"
             + 'LEFT JOIN SaidasMaquinasFotosCheckLists SMFC ON SMFC.idSaidasMaquinasCheckList = SMC.id' + "\n"
             + 'LEFT JOIN SaidasMaquinasItensFotosCheckLists SMIFC ON SMIFC.idSaidasMaquinasFotosCheckList = SMFC.id' + "\n"
-            + 'WHERE ' + filterOption + ' = ' + filterParam + ' '
+            + 'WHERE SMC.id  = ' + filterParam + ' '
 
             , { type: sequelize.QueryTypes.SELECT })
             .catch((e) => {
@@ -120,6 +120,11 @@ exports.getByAf = async (AF) => {
 const InsertSaidasMaquinasChecklist = async (data) => {
 
     try {
+
+            if (data[0].horimetro == '' || data[0].Observacao == '')
+                data[0].horimetro = null;
+                data[0].Observacao = null;
+            
         await
             Sequelize.query(
                 ' INSERT INTO SaidasMaquinasCheckLists ' + "\n"

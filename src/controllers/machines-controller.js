@@ -88,13 +88,13 @@ exports.listOutChecklists = async (req, res, next) => {
 exports.listOutChecklistItens = async (req, res, next) => {
 
     try {
-        let filterOption = req.params.filterOption;
+       
         let filterParam = req.params.filterParam;
         let rearangeArray = [];
         let resultArray = [];
 
         var data =
-            await Repository.listOutChecklistItens(filterOption, filterParam)
+            await Repository.listOutChecklistItens(filterParam)
 
         
         res.status(200).send(data)
