@@ -112,9 +112,13 @@ exports.listOutChecklistItens = async (req, res, next) => {
 exports.listModels = async (req, res, next) => {
 
     try {
+        let models = []
         var data =
             await Repository.listModels()
-        res.status(200).send(data)
+            data.forEach(res => {
+                models.push(res.Modelo)
+            })
+        res.status(200).send(models)
     } catch (e) {
 
         res.status(500).send({
