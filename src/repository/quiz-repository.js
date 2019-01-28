@@ -6,6 +6,7 @@ const Quiz = require('../../src/models/Questionarios-models')
 const Questions = require('../../src/models/ItensCheckListModelos-models')
 const QuestionQuiz = require('../../src/models/PerguntasQuestionarios-models')
 const ModelQuiz = require('../models/ModelosQuestionarios-models')
+const Models = require('../models/Modelos-models')
 
 exports.listQuiz = async () => {
 
@@ -82,7 +83,9 @@ exports.listQuestions = async () => {
 
         let res =
             await Questions.findAll({
-                attributes: ['Descricao']
+                attributes: ['Descricao'],
+                group:['Descricao']
+                
             })
 
         return res;
@@ -188,7 +191,38 @@ exports.removeQuestion = async(object) => {
         let remove = 
             await QuestionQuiz.destroy({
                 where:{
-                    id: id
+                    idItensCheckListModelos: id
+                }
+            })
+
+         
+        return remove;
+
+    } catch (e) {
+     
+        console.log(e)
+        throw new Error(e)
+        
+    }
+}
+
+exports.removeModel = async(object) => {
+
+    try {   
+        let Model = String(object.Model)
+         let res =
+            await Models.findOne({
+                raw: true,
+                attributes:['id','Modelo'],
+                where: {
+                    Modelo: Model
+                }
+            })
+        let id = res.id
+        let remove = 
+            await ModelQuiz.destroy({
+                where:{
+                    idModelos: id
                 }
             })
 

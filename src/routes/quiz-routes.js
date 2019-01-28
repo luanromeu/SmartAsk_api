@@ -21,6 +21,7 @@ router.put('/delete/:id', authService.authorize ,controller.deleteQuiz)
 
 //DELETE
 router.delete('/removequestion',authService.authorize, controller.removeQuestion)
+router.delete('/removemodel', authService.authorize, controller.removeModel)
 
 
 module.exports = router;

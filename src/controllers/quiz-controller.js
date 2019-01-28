@@ -214,3 +214,21 @@ exports.removeQuestion = async(req, res, next) => {
         throw new Error(e)
     }
 }
+
+exports.removeModel = async(req, res, next) => {
+
+    try {
+        let object = req.body || req.params
+        let data =
+            await Repository.removeModel(object)
+            res.status(200).send({
+                message:"Modelo removido com sucesso"
+            })
+    } catch (e) {
+        res.status(400).send({
+            message:"Erro ao remover Modelo"
+        })
+        console.log(e)
+        throw new Error(e)
+    }
+}

@@ -224,8 +224,7 @@ const SelectGrupoStatusChecklist = async () => {
                     })
 
         auxGrupo = parseInt(resultUltimoIdGrupoStatusChecklist[0].Grupo) + 2
-        console.log('cccccccccccccccccccc',resultUltimoIdGrupoStatusChecklist[0].Grupo)
-        console.log('bbbbbbbbbbbbbb',auxGrupo)
+      
     } catch (e) {
         console.log(e)
         throw new Error(e);
@@ -243,9 +242,9 @@ const SelectGrupoStatusChecklistId = async () => {
                         console.log('ERRO AO CONSULTAR UltimoIdGrupoStatusChecklistId ', e)
                         throw new Error(e);
                     })
-        console.log('bostaa ' , bosta)
+    
         aux = parseInt(bosta[0].id) + 1
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa',aux)
+
     } catch (e) {
         console.log(e)
         throw new Error(e);
@@ -433,10 +432,10 @@ const SendImagesToWeb = async (data, localpath, remotepath, optionalObj) => {
             if (res.fotos != null || res.fotos != "" || res.fotos.length != 0)
                 await res.fotos.forEach(async base64Str => {
                     if (base64Str != null || base64Str.length != 0 || base64Str != "")
-                        console.log(base64Str.length)
+                       // console.log(base64Str.length)
                     resultimage = base64ToImage(base64Str, localpath, optionalObj)
                     resultsend = ftp.SendToServer(localpath + resultimage.fileName, remotepath + resultimage.fileName)
-                    console.log(resultimage)
+                  //  console.log(resultimage)
                     arrayImages.push(resultimage);
                     return arrayImages;
                 })
