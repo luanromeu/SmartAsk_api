@@ -2,24 +2,26 @@
 
 const sequelize = require('sequelize')
 const Sequelize = require('../db')
-
 const Quiz = require('../../src/models/Questionarios-models')
+const Questions = require('../../src/models/ItensCheckListModelos-models')
+const QuestionQuiz = require('../../src/models/PerguntasQuestionarios-models')
+const ModelQuiz = require('../models/ModelosQuestionarios-models')
 
 exports.listQuiz = async () => {
 
     try {
 
         let res =
-            await Quiz.findAll({ 
-                    
+            await Quiz.findAll({
+
                 attributes: ['id', 'nome'],
                 where: Sequelize.or(
-                    {Inativo: 0},
-                    {Inativo: null}
-                    )
+                    { Inativo: 0 },
+                    { Inativo: null }
+                )
             })
 
-           
+
         return res
 
     } catch (e) {
@@ -42,7 +44,7 @@ exports.QuizDetails = async (idQuiz) => {
                 + ' INNER JOIN Questionarios Q ON MQ.idQuestionario = Q.id' + "\n"
                 + ' INNER JOIN PerguntasQuestionarios PQ ON PQ.idQuestionario = Q.id' + "\n"
                 + ' INNER JOIN ItensCheckListModelos ICM ON PQ.idItensCheckListModelos = ICM.id'
-                + ' WHERE Q.id = ' + idQuiz + ''
+                + ' WHERE (Q.id = ' + idQuiz + ' AND Q.Inativo = 0 OR Q.Inativo IS NULL)'
 
                 , { type: Sequelize.QueryTypes.SELECT })
 
@@ -74,6 +76,24 @@ exports.NewQuiz = async (object) => {
 }
 
 
+exports.listQuestions = async () => {
+
+    try {
+
+        let res =
+            await Questions.findAll({
+                attributes: ['Descricao']
+            })
+
+        return res;
+
+    } catch (e) {
+        console.log(e)
+        throw new Error(e)
+    }
+}
+
+
 exports.deleteQuiz = async (id) => {
 
     try {
@@ -91,3 +111,94 @@ exports.deleteQuiz = async (id) => {
     }
 }
 
+
+exports.addQuestionQuiz = async (object) => {
+
+    try {
+
+
+
+        let Question = String(object.Question)
+        let idQuestion =
+            await Questions.findOne({
+                raw: true,
+                attributes: ['id', 'Descricao'],
+                where: {
+                    Descricao: Question
+                }
+            })
+
+        idQuestion = idQuestion.id
+
+        let NewQuestionQuiz =
+            await QuestionQuiz.build({
+
+                idQuestionario: object.idQuiz,
+                idItensCheckListModelos: idQuestion
+            })
+
+        let res = await
+            NewQuestionQuiz.save();
+
+            return res
+
+    } catch (e) {
+        console.log(e)
+        throw new Error(e)
+    }
+}
+
+
+exports.addNewModel = async (object) => {
+
+    try {
+
+        let Model = 
+            await ModelQuiz.build({
+            
+                idQuestionario: object.idQuestionario,
+                idModelos: object.idModelo
+            })
+
+        let res =
+            await Model.save()   
+    return res
+
+    } catch (e) {
+
+        console.log(e)
+        throw new Error(e)
+
+    }
+}
+
+exports.removeQuestion = async(object) => {
+
+    try {   
+        let Question = String(object.Question)
+         let res =
+            await Questions.findOne({
+                raw: true,
+                attributes:['Descricao' , 'id'],
+                where: {
+                    Descricao: Question
+                }
+            })
+        let id = res.id
+        let remove = 
+            await QuestionQuiz.destroy({
+                where:{
+                    id: id
+                }
+            })
+
+         
+        return remove;
+
+    } catch (e) {
+     
+        console.log(e)
+        throw new Error(e)
+        
+    }
+}

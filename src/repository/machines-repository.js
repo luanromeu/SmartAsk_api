@@ -8,6 +8,7 @@ const base64ToImage = require('base64-to-image');
 const ftp = require('../services/ftp-service')
 
 var aux;
+var auxGrupo;
 var resultUltimoIdGrupoStatusChecklist;
 var resultUltimoItemInseridoSaidasMaquinas;
 var resultUltimoItemInseridoCheckListModelos;
@@ -92,18 +93,22 @@ exports.getByAf = async (AF) => {
     const result =
         await
             Sequelize.query(
-                'SELECT Ma.CodigoExibicao, Mo.Modelo , Mo.id AS idModelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
-                + ' AM.Apelido, SC.Descricao AS Respostas, Substring(Mo.ApelidoOLD, 4, 2) AS Altura, ' + "\n"
-                + ' Ma.id AS idMaquinas , TM.TipoModelo' + "\n"
-                + ' FROM CheckListModelos CM ' + "\n"
-                + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
-                + ' LEFT JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
-                + ' LEFT JOIN GruposStatusCheckLists GSC ON GSC.id = ICM.idGruposStatusCheckList ' + "\n"
-                + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
-                + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
-                + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
-                + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
-                + ' WHERE Ma.CodigoExibicao = ' + AF + ' ORDER BY ICM.Ordem'
+                'SELECT * FROM Maquinas M' 
+               +' INNER JOIN Modelos MO ON M.idModelos = MO.id'
+               +' WHERE M.CodigoExibicao = ' + AF +''
+               
+                // 'SELECT Ma.CodigoExibicao, Mo.Modelo , Mo.id AS idModelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
+                // + ' AM.Apelido, SC.Descricao AS Respostas, Substring(Mo.ApelidoOLD, 4, 2) AS Altura, ' + "\n"
+                // + ' Ma.id AS idMaquinas , TM.TipoModelo' + "\n"
+                // + ' FROM CheckListModelos CM ' + "\n"
+                // + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
+                // + ' LEFT JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
+                // + ' LEFT JOIN GruposStatusCheckLists GSC ON GSC.id = ICM.idGruposStatusCheckList ' + "\n"
+                // + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
+                // + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
+                // + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
+                // + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
+                // + ' WHERE Ma.CodigoExibicao = ' + AF + ' ORDER BY ICM.Ordem'
 
                 , { type: sequelize.QueryTypes.SELECT })
 
@@ -193,6 +198,7 @@ const SelectChecklistModelos = async () => {
                 Sequelize.query('SELECT id FROM CheckListModelos ORDER BY id DESC LIMIT 1 '
 
                     , { type: sequelize.QueryTypes.SELECT })
+                   
                     .catch((e) => {
                         console.log('ERRO AO CONSULTAR UltimoItemInseridoCheckListModelos ', e)
                         throw new Error(e);
@@ -217,7 +223,9 @@ const SelectGrupoStatusChecklist = async () => {
                         throw new Error(e);
                     })
 
-        aux = parseInt(resultUltimoIdGrupoStatusChecklist[0].Grupo) + 1
+        auxGrupo = parseInt(resultUltimoIdGrupoStatusChecklist[0].Grupo) + 2
+        console.log('cccccccccccccccccccc',resultUltimoIdGrupoStatusChecklist[0].Grupo)
+        console.log('bbbbbbbbbbbbbb',auxGrupo)
     } catch (e) {
         console.log(e)
         throw new Error(e);
@@ -235,8 +243,9 @@ const SelectGrupoStatusChecklistId = async () => {
                         console.log('ERRO AO CONSULTAR UltimoIdGrupoStatusChecklistId ', e)
                         throw new Error(e);
                     })
-
-        aux = parseInt(resultUltimoIdGrupoStatusChecklist[0].Grupo) + 1
+        console.log('bostaa ' , bosta)
+        aux = parseInt(bosta[0].id) + 1
+        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa',aux)
     } catch (e) {
         console.log(e)
         throw new Error(e);
@@ -247,7 +256,7 @@ const SelectGrupoStatusChecklistId = async () => {
 const InsertGruposStatusChecklist = async () => {
     try {
         await
-            Sequelize.query('INSERT INTO GruposStatusCheckLists (Grupo) VALUES (' + aux + ')'
+            Sequelize.query('INSERT INTO GruposStatusCheckLists (Grupo) VALUES (' + auxGrupo + ')'
 
                 , { type: sequelize.QueryTypes.INSERT })
 
@@ -272,7 +281,7 @@ const InsertItensChecklistModelos = async (data) => {
             await
 
                 Sequelize.query(
-                    'INSERT INTO ItensCheckListModelos (Descricao, idGruposStatusCheckList ) VALUES (' + "'" + data[i].perguntas + "'" + ',' + aux + ')'
+                    'INSERT INTO ItensCheckListModelos (Descricao, idCheckListModelos, idGruposStatusCheckList) VALUES (' + "'" + data[i].perguntas + "'" + ',' + resultUltimoItemInseridoCheckListModelos[0].id + ',' + aux + ')'
 
                     , { type: sequelize.QueryTypes.INSERT })
                     .catch((e) => {
@@ -455,7 +464,11 @@ exports.PostOutmachines = async (data) => {
 
             await SelectGrupoStatusChecklist().catch((e) => { return t.rollback() })
 
+            await SelectGrupoStatusChecklistId().catch((e) => { return t.rollback() })
+
             await InsertGruposStatusChecklist().catch((e) => { return t.rollback() })
+
+            await SelectChecklistModelos().catch((e) => { return t.rollback() })
 
             await InsertItensChecklistModelos(data).catch((e) => { return t.rollback() })
 
@@ -465,19 +478,15 @@ exports.PostOutmachines = async (data) => {
 
             await SelectStatusChecklist().catch((e) => { return t.rollback() })
 
-            await SelectChecklistModelos().catch((e) => { return t.rollback() })
-
-            await SelectGrupoStatusChecklistId().catch((e) => { return t.rollback() })
-
             await InsertSaidasMaquinasItensChecklists().catch((e) => { return t.rollback() })
 
-            await SendImagesToWeb(data, '/home/luan/Desktop', '/checklist/', { type: 'jpg' }).catch((e) => { return t.rollback() })
+           // await SendImagesToWeb(data, '/home/luan/Desktop', '/checklist/', { type: 'jpg' }).catch((e) => { return t.rollback() })
 
             await SelectSaidasMaquinasFotosChecklists().catch(() => { return t.rollback() })
 
             await InsertImages().catch((e) => { return t.rollback() })
 
-            await SaidasMaquinasItensFotosCheckLists(arrayImages).catch((e) => { return t.rollback() })
+           // await SaidasMaquinasItensFotosCheckLists(arrayImages).catch((e) => { return t.rollback() })
         })
 
     } catch (e) {
@@ -485,6 +494,10 @@ exports.PostOutmachines = async (data) => {
         throw new Error(e);
     }
 }
+          
+
+           
+
 
 
 exports.listMachinesOut = async (AF) => {
@@ -536,7 +549,8 @@ exports.listByModel = async (Modelo) => {
 exports.listModels = async () => {
     try {
         let res =
-            await Sequelize.query('SELECT Modelo FROM Modelos'
+            await Sequelize.query(
+                'SELECT Modelo FROM Modelos'
                 , { type: sequelize.QueryTypes.SELECT })
 
         return res;
