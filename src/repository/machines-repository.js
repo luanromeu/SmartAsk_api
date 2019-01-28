@@ -93,22 +93,22 @@ exports.getByAf = async (AF) => {
     const result =
         await
             Sequelize.query(
-                'SELECT * FROM Maquinas M' 
-               +' INNER JOIN Modelos MO ON M.idModelos = MO.id'
-               +' WHERE M.CodigoExibicao = ' + AF +''
-               
-                // 'SELECT Ma.CodigoExibicao, Mo.Modelo , Mo.id AS idModelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
-                // + ' AM.Apelido, SC.Descricao AS Respostas, Substring(Mo.ApelidoOLD, 4, 2) AS Altura, ' + "\n"
-                // + ' Ma.id AS idMaquinas , TM.TipoModelo' + "\n"
-                // + ' FROM CheckListModelos CM ' + "\n"
-                // + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
-                // + ' LEFT JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
-                // + ' LEFT JOIN GruposStatusCheckLists GSC ON GSC.id = ICM.idGruposStatusCheckList ' + "\n"
-                // + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
-                // + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
-                // + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
-                // + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
-                // + ' WHERE Ma.CodigoExibicao = ' + AF + ' ORDER BY ICM.Ordem'
+            //     'SELECT * FROM Maquinas M' 
+            //    +' INNER JOIN Modelos MO ON M.idModelos = MO.id'
+            //    +' WHERE M.CodigoExibicao = ' + AF +''
+
+                'SELECT Ma.CodigoExibicao, Mo.Modelo , Mo.id AS idModelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
+                + ' AM.Apelido, SC.Descricao AS Respostas, Substring(Mo.ApelidoOLD, 4, 2) AS Altura, ' + "\n"
+                + ' Ma.id AS idMaquinas , TM.TipoModelo' + "\n"
+                + ' FROM CheckListModelos CM ' + "\n"
+                + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
+                + ' LEFT JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
+                + ' LEFT JOIN GruposStatusCheckLists GSC ON GSC.id = ICM.idGruposStatusCheckList ' + "\n"
+                + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
+                + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
+                + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
+                + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
+                + ' WHERE Ma.CodigoExibicao = ' + AF + ' ORDER BY ICM.Ordem'
 
                 , { type: sequelize.QueryTypes.SELECT })
 
