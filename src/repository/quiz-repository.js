@@ -7,6 +7,7 @@ const Questions = require('../../src/models/ItensCheckListModelos-models')
 const QuestionQuiz = require('../../src/models/PerguntasQuestionarios-models')
 const ModelQuiz = require('../models/ModelosQuestionarios-models')
 const Models = require('../models/Modelos-models')
+const Machines = require('../../src/models/Maquinas-models')
 
 exports.listQuiz = async () => {
 
@@ -40,19 +41,21 @@ exports.QuizDetails = async (idQuiz) => {
         let res =
             await Sequelize.query(
 
-                ' SELECT Mo.Modelo , ICM.Descricao AS Perguntas FROM ModelosQuestionarios MQ' + "\n"
+                ' SELECT Mo.Modelo ,Mo.id, ICM.Descricao AS Perguntas, ICM.id AS idPergunta FROM ModelosQuestionarios MQ ' + "\n"
                 + ' INNER JOIN Modelos Mo ON  MQ.idModelos = Mo.id' + "\n"
                 + ' INNER JOIN Questionarios Q ON MQ.idQuestionario = Q.id' + "\n"
                 + ' INNER JOIN PerguntasQuestionarios PQ ON PQ.idQuestionario = Q.id' + "\n"
-                + ' INNER JOIN ItensCheckListModelos ICM ON PQ.idItensCheckListModelos = ICM.id'
-                + ' WHERE (Q.id = ' + idQuiz + ' AND Q.Inativo = 0 OR Q.Inativo IS NULL)'
+                + ' INNER JOIN ItensCheckListModelos ICM ON PQ.idItensCheckListModelos = ICM.id' + "\n"
+                + ' WHERE Q.id = ' + idQuiz + ' AND (Q.Inativo = 0 OR Q.Inativo IS NULL) ' + "\n"
+                + ' AND (PQ.Inativo = 0 OR PQ.Inativo IS NULL) AND (MQ.Inativo = 0 OR MQ.Inativo IS NULL )' + "\n"
+                + ' ORDER BY PQ.id ASC'
 
                 , { type: Sequelize.QueryTypes.SELECT })
 
         return res;
 
     } catch (e) {
-
+        console.log(e)
     }
 }
 
@@ -83,9 +86,10 @@ exports.listQuestions = async () => {
 
         let res =
             await Questions.findAll({
-                attributes: ['Descricao'],
-                group:['Descricao']
-                
+                attributes: ['Descricao', 'id'],
+                group: ['Descricao'],
+                order: [['id', 'ASC']]
+
             })
 
         return res;
@@ -119,120 +123,199 @@ exports.addQuestionQuiz = async (object) => {
 
     try {
 
-
-
-        let Question = String(object.Question)
-        let idQuestion =
-            await Questions.findOne({
+        let question =
+            await QuestionQuiz.find({
                 raw: true,
-                attributes: ['id', 'Descricao'],
-                where: {
-                    Descricao: Question
-                }
+                where: sequelize.and(
+                    { idItensCheckListModelos: object.idQuestion },
+                    { idQuestionario: object.idQuiz}
+                )
             })
+          
 
-        idQuestion = idQuestion.id
+         if (!question) {
+        
 
-        let NewQuestionQuiz =
-            await QuestionQuiz.build({
+            let NewQuestionQuiz =
+                await QuestionQuiz.build({
 
-                idQuestionario: object.idQuiz,
-                idItensCheckListModelos: idQuestion
-            })
+                    idQuestionario: object.idQuiz,
+                    idItensCheckListModelos: object.idQuestion
+                })
 
-        let res = await
-            NewQuestionQuiz.save();
+            let res = await
+                NewQuestionQuiz.save();
 
-            return res
+            return res;
+
+         } else {
+          
+            let update =
+                await QuestionQuiz.update(
+                    { Inativo: 0 },
+                    { where: sequelize.and(
+
+                        { idQuestionario: object.idQuiz },
+                        { idItensCheckListModelos: object.idQuestion }
+                    )}
+                )
+            return update;
+         }
+
+
 
     } catch (e) {
         console.log(e)
         throw new Error(e)
     }
 }
+
+
+
+
 
 
 exports.addNewModel = async (object) => {
 
     try {
 
-        let Model = 
-            await ModelQuiz.build({
-            
-                idQuestionario: object.idQuestionario,
-                idModelos: object.idModelo
+        let model =
+            await ModelQuiz.find({
+                raw: true,
+                where: sequelize.and(
+                    
+                    { idModelos: object.idModelo },
+                    { idQuestionario: object.idQuestionario }
+                    
+                    )
             })
+
+        if (!model) {
+
+
+            let Model =
+                await ModelQuiz.build({
+
+                    idQuestionario: object.idQuestionario,
+                    idModelos: object.idModelo
+                })
+
+            let res =
+                await Model.save()
+            return res
+
+        } else {
+
+            let update =
+                await ModelQuiz.update(
+                    { Inativo: 0 },
+                    { where: sequelize.and(
+                        { idQuestionario: object.idQuestionario },
+                        { idModelos: object.idModelo }
+                    )}
+                )
+            return update;
+        }
+
+
+    } catch (e) {
+
+        console.log(e)
+        throw new Error(e)
+
+    }
+}
+
+exports.removeQuestion = async (object) => {
+
+    try {
+        
+        
+
+        let remove =
+            await QuestionQuiz.update(
+                { Inativo: 1 },
+                { where: sequelize.and(
+
+                    { idItensCheckListModelos: object.idquestion },
+                    { idQuestionario: object.idquiz} 
+                ) 
+            })
+
+
+        return remove;
+
+    } catch (e) {
+
+        console.log(e)
+        throw new Error(e)
+
+    }
+}
+
+exports.removeModel = async (object) => {
+
+    try {
+
+        
+        let remove =
+            await ModelQuiz.update(
+                { Inativo: 1 },
+                { where: sequelize.and(
+
+                    { idModelos: object.idmodel },
+                    { idQuestionario: object.idquiz} 
+                 ) 
+                })
+        return remove;
+
+    } catch (e) {
+
+        console.log(e)
+        throw new Error(e)
+
+    }
+}
+
+
+
+exports.listQuizByAF = async (object) => {
+    try {
+
+
+
+        Machines.belongsTo(Models, { foreignKey: 'idModelos' })
+        Models.hasMany(Machines)
+
 
         let res =
-            await Model.save()   
-    return res
+            await Machines.findAll({
 
-    } catch (e) {
-
-        console.log(e)
-        throw new Error(e)
-
-    }
-}
-
-exports.removeQuestion = async(object) => {
-
-    try {   
-        let Question = String(object.Question)
-         let res =
-            await Questions.findOne({
+                attributes: ['id', 'idModelos'],
                 raw: true,
-                attributes:['Descricao' , 'id'],
+                include: [{
+
+                    model: Models,
+                    attributes: ['id', 'Modelo'],
+                    required: true,
+                }],
                 where: {
-                    Descricao: Question
-                }
-            })
-        let id = res.id
-        let remove = 
-            await QuestionQuiz.destroy({
-                where:{
-                    idItensCheckListModelos: id
-                }
+
+                    CodigoExibicao: object
+                },
+
             })
 
-         
-        return remove;
+        console.log(res)
+        return res
 
     } catch (e) {
-     
+
         console.log(e)
         throw new Error(e)
-        
     }
 }
 
-exports.removeModel = async(object) => {
 
-    try {   
-        let Model = String(object.Model)
-         let res =
-            await Models.findOne({
-                raw: true,
-                attributes:['id','Modelo'],
-                where: {
-                    Modelo: Model
-                }
-            })
-        let id = res.id
-        let remove = 
-            await ModelQuiz.destroy({
-                where:{
-                    idModelos: id
-                }
-            })
 
-         
-        return remove;
 
-    } catch (e) {
-     
-        console.log(e)
-        throw new Error(e)
-        
-    }
-}

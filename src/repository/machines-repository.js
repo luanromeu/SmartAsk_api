@@ -549,7 +549,7 @@ exports.listModels = async () => {
     try {
         let res =
             await Sequelize.query(
-                'SELECT Modelo FROM Modelos'
+                'SELECT id, Modelo FROM Modelos'
                 , { type: sequelize.QueryTypes.SELECT })
 
         return res;

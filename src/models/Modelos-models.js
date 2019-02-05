@@ -1,5 +1,7 @@
 const sequelize = require('../../src/db');
 const Sequelize = require('sequelize');
+const Maquinas = require('../models/Maquinas-models')
+
 
 const Modelos = sequelize.define('Modelos', {
 
@@ -55,14 +57,17 @@ const Modelos = sequelize.define('Modelos', {
     idApelidosModelos:{
         type:Sequelize.STRING,
         defaultValue:null
-    }
+    },
     
+},
 
 
-});
+
+);
 
 // force: Se True , Substiu a tabela existente
 Modelos.sync({ force: false }).then(() => {
+
 
     // Retorna Tabela Criada
     return Modelos;

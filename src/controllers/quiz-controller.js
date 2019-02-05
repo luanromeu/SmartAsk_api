@@ -42,7 +42,10 @@ exports.listQuestions = async (req, res, next) => {
 
                         if (perguntas.indexOf(res2.Descricao) == -1) {
 
-                            perguntas.push(res2.Descricao)
+                            perguntas.push({
+                                Perguntas:res2.Descricao,
+                                id: res2.id
+                            })
                         }
                     }
                 })
@@ -70,41 +73,44 @@ exports.QuizDetails = async (req, res, next) => {
 
         let data =
             await Repository.QuizDetails(idQuiz)
-
+       
         data.forEach(result => {
+          
 
-            let index = data.indexOf(result.Modelo)
-
-            if (index == -1) {
+            let index = data.findIndex(resultfind =>  resultfind.Modelo === result.Modelos)
+                
+           if (index === -1) {
 
                 data.forEach(result2 => {
-
-                    if (result.Modelo == result2.Modelo) {
-
-                        if (models.indexOf(result2.Modelo) == -1) {
-
-                            models.push(result2.Modelo)
+                    
+                    if (result.Modelo === result2.Modelo) {
+                    
+                    let index2 = models.findIndex(resultf2 => resultf2.Modelo === result2.Modelo )
+                        
+                        if ( index2 === -1) {
+                   
+                            models.push({Modelo:result2.Modelo, id:result2.id})
 
                         }
 
                     }
+                   
+                    if (result.Perguntas === result2.Perguntas) {
 
-                    if (result.Perguntas == result2.Perguntas) {
-
-                        if (questions.indexOf(result2.Perguntas) == -1) {
-
-                            questions.push(result2.Perguntas)
+                        let index3 = questions.findIndex(resultf3 => resultf3.Perguntas === result2.Perguntas )
+                    
+                        if ( index3 === -1) {
+                            
+                            questions.push({Perguntas:result2.Perguntas, id:result2.idPergunta})
                         }
                     }
                 })
 
             }
         });
-
-        array.push(models)
-        array.push(questions)
-
-        res.status(200).send(array)
+              
+        array.push(models,questions)
+       res.status(200).send(array)
 
     } catch (e) {
         res.status(400).send({
@@ -200,7 +206,8 @@ exports.addNewModel = async (req, res, next) => {
 exports.removeQuestion = async(req, res, next) => {
 
     try {
-        let object = req.body || req.params
+        let object = req.query
+        console.log(object)
         let data =
             await Repository.removeQuestion(object)
             res.status(200).send({
@@ -218,7 +225,8 @@ exports.removeQuestion = async(req, res, next) => {
 exports.removeModel = async(req, res, next) => {
 
     try {
-        let object = req.body || req.params
+        let object = req.query
+            console.log(object)
         let data =
             await Repository.removeModel(object)
             res.status(200).send({
@@ -230,5 +238,23 @@ exports.removeModel = async(req, res, next) => {
         })
         console.log(e)
         throw new Error(e)
+    }
+}
+
+exports.listQuizByAf = async (req, res, next) => {
+    
+    try {
+        
+        let object = req.body.id || req.params.id
+        let data = 
+            await Repository.listQuizByAF(object)
+        
+            res.status(200).send(data)
+    } catch (e) {
+        
+        console.log(e)
+        res.status(500).send({
+            message: e.message
+        })
     }
 }

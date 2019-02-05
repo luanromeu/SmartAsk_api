@@ -7,8 +7,10 @@ const authService = require('../../src/services/auth-service');
 
 // GET
 router.get('/', authService.authorize, controller.listQuiz)
+router.get('/listquizbyaf/:id', authService.authorize, controller.listQuizByAf)
 router.get('/quizdetails/:id', authService.authorize, controller.QuizDetails)
 router.get('/listquestions' , authService.authorize, controller.listQuestions)
+
 
 //POST
 router.post('/new' ,authService.authorize, controller.NewQuiz)
@@ -20,8 +22,8 @@ router.post('/newmodel', authService.authorize, controller.addNewModel)
 router.put('/delete/:id', authService.authorize ,controller.deleteQuiz)
 
 //DELETE
-router.delete('/removequestion',authService.authorize, controller.removeQuestion)
-router.delete('/removemodel', authService.authorize, controller.removeModel)
+router.delete('/removequestion/:id',authService.authorize, controller.removeQuestion)
+router.delete('/removemodel/:object', authService.authorize, controller.removeModel)
 
 
 module.exports = router;

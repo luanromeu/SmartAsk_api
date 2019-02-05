@@ -57,9 +57,13 @@ const machinesroute = require ('../src/routes/machines-routes')
 const empresaroute = require ('../src/routes/empresa-routes')
 const descriptionroute = require ('../src/routes/description-routes')
 const quizroutes = require ('../src/routes/quiz-routes')
+const questionroutes = require ('../src/routes/questions-routes')
 app.use('/login', loginroute)
 app.use('/machines', machinesroute )
 app.use('/business', empresaroute)
 app.use('/description', descriptionroute)
 app.use('/quiz', quizroutes)
+app.use('/questions' , questionroutes)
+
+
 module.exports = app;

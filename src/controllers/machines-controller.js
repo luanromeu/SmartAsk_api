@@ -116,7 +116,11 @@ exports.listModels = async (req, res, next) => {
         var data =
             await Repository.listModels()
             data.forEach(res => {
-                models.push(res.Modelo)
+                models.push(
+                    {
+                       Modelo:res.Modelo,
+                       id:res.id
+                    })
             })
         res.status(200).send(models)
     } catch (e) {
