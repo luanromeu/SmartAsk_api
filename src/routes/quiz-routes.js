@@ -7,7 +7,7 @@ const authService = require('../../src/services/auth-service');
 
 // GET
 router.get('/', authService.authorize, controller.listQuiz)
-router.get('/listquizbyaf/:id', authService.authorize, controller.listQuizByAf)
+router.get('/listquizbyaf/:id', controller.listQuizByAf)
 router.get('/quizdetails/:id', authService.authorize, controller.QuizDetails)
 router.get('/listquestions' , authService.authorize, controller.listQuestions)
 

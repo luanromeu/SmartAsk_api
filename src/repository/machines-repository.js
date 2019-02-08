@@ -87,30 +87,31 @@ exports.listOutChecklistItens = async ( filterParam) => {
 }
 
 
-exports.getByAf = async (AF) => {
+exports.questionsAndAnswersByQuiz = async (id) => {
 
 
     const result =
         await
             Sequelize.query(
-            //     'SELECT * FROM Maquinas M' 
-            //    +' INNER JOIN Modelos MO ON M.idModelos = MO.id'
-            //    +' WHERE M.CodigoExibicao = ' + AF +''
 
-                'SELECT Ma.CodigoExibicao, Mo.Modelo , Mo.id AS idModelo, Mo.Observacao, ICM.Descricao AS Perguntas, '
-                + ' AM.Apelido, SC.Descricao AS Respostas, Substring(Mo.ApelidoOLD, 4, 2) AS Altura, ' + "\n"
-                + ' Ma.id AS idMaquinas , TM.TipoModelo' + "\n"
-                + ' FROM CheckListModelos CM ' + "\n"
-                + ' INNER JOIN ItensCheckListModelos ICM ON ICM.idCheckListModelos = CM.id ' + "\n"
-                + ' LEFT JOIN ApelidosModelos AM ON idCheckListModelos = AM.id ' + "\n"
-                + ' LEFT JOIN GruposStatusCheckLists GSC ON GSC.id = ICM.idGruposStatusCheckList ' + "\n"
+                 ' SELECT Mo.Modelo ,Mo.id AS idModelo, ICM.Descricao AS Perguntas, ICM.id AS idPerguntas,' + "\n"
+                + ' SC.Descricao AS Respostas, SC.id AS idRespostas, Right(Mo.ApelidoOLD, 2) AS Altura, Ma.CodigoExibicao, ' + "\n"
+                + ' Ma.id AS idMaquinas' + "\n"
+                + ' FROM ModelosQuestionarios MQ ' + "\n"
+                + ' INNER JOIN Modelos Mo ON  MQ.idModelos = Mo.id ' + "\n"
+                + ' INNER JOIN Questionarios Q ON MQ.idQuestionario = Q.id ' + "\n"
+                + ' INNER JOIN PerguntasQuestionarios PQ ON PQ.idQuestionario = Q.id ' + "\n"
+                + ' INNER JOIN ItensCheckListModelos ICM ON PQ.idItensCheckListModelos = ICM.id ' + "\n"
+                + ' INNER JOIN GruposStatusCheckLists GSC ON ICM.idGruposStatusCheckList = GSC.id ' + "\n"
                 + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
-                + ' INNER JOIN Modelos Mo ON CM.idModelos = Mo.id ' + "\n"
                 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
-                + ' INNER JOIN TiposModelos TM ON TM.id = Mo.idTiposModelos ' + "\n"
-                + ' WHERE Ma.CodigoExibicao = ' + AF + ' ORDER BY ICM.Ordem'
+                + ' WHERE Q.id = '+id+'' + "\n"
+                + ' AND (Q.Inativo = 0 OR Q.Inativo IS NULL) ' + "\n"
+                + ' AND (PQ.Inativo = 0 OR  PQ.Inativo IS NULL) '  + "\n"
+                + ' AND (MQ.Inativo = 0 OR MQ.Inativo IS NULL ) '    
 
-                , { type: sequelize.QueryTypes.SELECT })
+                ,{ type: sequelize.QueryTypes.SELECT })
+                
 
                 .catch((e) => {
                     console.log('ERRO AO PESQUISAR MAQUINA POR AF ', e)
@@ -125,6 +126,7 @@ exports.getByAf = async (AF) => {
 const InsertSaidasMaquinasChecklist = async (data) => {
 
     try {
+        console.log(data[0])
 
             if (data[0].horimetro == '' || data[0].Observacao == '')
                 data[0].horimetro = null;

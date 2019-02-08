@@ -34,6 +34,8 @@ exports.listQuiz = async () => {
 
 }
 
+
+
 exports.QuizDetails = async (idQuiz) => {
 
     try {
@@ -279,34 +281,22 @@ exports.removeModel = async (object) => {
 
 
 
-exports.listQuizByAF = async (object) => {
+exports.listQuizByAF = async (id) => {
     try {
 
+        let res =  
+            await Sequelize.query(
+                 ' SELECT Q.nome, Q.id ' + "\n"
+                +' FROM PerguntasQuestionarios PQ '  + "\n"
+                +' INNER JOIN Questionarios Q ON PQ.idQuestionario = Q.id ' + "\n"
+                +' INNER JOIN ModelosQuestionarios MQ ON MQ.idQuestionario = Q.id ' + "\n"
+                +' INNER JOIN Modelos Mo ON MQ.idModelos = Mo.id ' + "\n"
+                +' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
+                +' WHERE Ma.CodigoExibicao = '+id+' AND (MQ.Inativo <> 1) ' + "\n"
+                +' GROUP BY Q.nome '
+            ,{type:sequelize.QueryTypes.SELECT})
 
-
-        Machines.belongsTo(Models, { foreignKey: 'idModelos' })
-        Models.hasMany(Machines)
-
-
-        let res =
-            await Machines.findAll({
-
-                attributes: ['id', 'idModelos'],
-                raw: true,
-                include: [{
-
-                    model: Models,
-                    attributes: ['id', 'Modelo'],
-                    required: true,
-                }],
-                where: {
-
-                    CodigoExibicao: object
-                },
-
-            })
-
-        console.log(res)
+    
         return res
 
     } catch (e) {

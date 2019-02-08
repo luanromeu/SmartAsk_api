@@ -245,11 +245,13 @@ exports.listQuizByAf = async (req, res, next) => {
     
     try {
         
-        let object = req.body.id || req.params.id
+        let id = req.body.id || req.params.id
+        
         let data = 
-            await Repository.listQuizByAF(object)
+            await Repository.listQuizByAF(id)
         
             res.status(200).send(data)
+
     } catch (e) {
         
         console.log(e)

@@ -133,16 +133,17 @@ exports.listModels = async (req, res, next) => {
 
 }
 
-exports.listByAF = async (req, res, next) => {
+exports.questionsAndAnswersByQuiz = async (req, res, next) => {
 
     try {
 
         let array = [];
         let rearangeArray = [];
-        let AF = req.params.AF;
+        let id = req.query.id;
+        console.log(id)
         let data =
-            await Repository.getByAf(AF)
-           // console.log(data)
+            await Repository.questionsAndAnswersByQuiz(id)
+           //console.log(data)
         array.push({ Altura: data[0].Altura, AF: data[0].CodigoExibicao, TipoModelo: data[0].TipoModelo, Modelo: data[0].Modelo })
         data.forEach(res => {
 
