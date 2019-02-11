@@ -144,6 +144,7 @@ exports.questionsAndAnswersByQuiz = async (req, res, next) => {
         let data =
             await Repository.questionsAndAnswersByQuiz(id)
            //console.log(data)
+        
         array.push({ Altura: data[0].Altura, AF: data[0].CodigoExibicao, TipoModelo: data[0].TipoModelo, Modelo: data[0].Modelo })
         data.forEach(res => {
 
@@ -177,10 +178,11 @@ exports.questionsAndAnswersByQuiz = async (req, res, next) => {
 
         res.status(200).send(array)
 
-    } catch (error) {
-        console.log(error)
+    } catch (e) {
+        console.log(e)
         res.status(500).send({
-            message: "Falha ao processar requisição"
+            message: "Falha ao processar requisição",
+            e
         })
     }
 }

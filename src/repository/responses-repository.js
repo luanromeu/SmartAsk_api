@@ -19,51 +19,105 @@ exports.addNewReponse = async (object) => {
                 limit:1,
                 order:[ ['Grupo','DESC'] ]
                 })
+               
+                if (group == null || group == undefined ){
 
-            
-            let groupresult;     
-            group.Grupo === parseFloat(group.Grupo) + 1 ? groupresult = await 
-            group.Grupo : groupresult = await
-            '00'+ (parseFloat(group.Grupo) +1) ;
-         
-            let groupadd =
-            await Group.build({
+                    group = {
+                        Group: null
+                    }    
+                    
+                    group.Grupo = parseFloat('001')
 
-                Grupo: groupresult
-            })
-
-           await groupadd.save()
-
-            let groupid =
-
-            await Group.find({
-                raw:true,
-                attributes:['id'],
-                limit:1,
-                order:[ ['Grupo','DESC'] ]
-                })
-
+                    let groupresult;
+                     group.Grupo === parseFloat(group.Grupo) + 1 ? groupresult = 
+                     await group.Grupo : groupresult = 
+                     await '00'+ (parseFloat(group.Grupo) +1) ;
+                 
+                    let groupadd =
+                    await Group.build({
         
-        let response =
-             await Responses.build({
+                        Grupo: groupresult
+                    })
+        
+                   await groupadd.save()
+        
+                    let groupid =
+        
+                    await Group.find({
+                        raw:true,
+                        attributes:['id'],
+                        limit:1,
+                        order:[ ['Grupo','DESC'] ]
+                        })
+        
+                
+                let response =
+                     await Responses.build({
+        
+                            Descricao: object.response,
+                            idGruposStatusCheckList: groupid.id
+                     })
+        
+                     await response.save()
+        
+                let question = 
+        
+                    await Questions.update(
+        
+                        { idGruposStatusCheckList: groupid.id },
+                        { where: { id: object.idquestion } }
+                    )
+        
+                    return question;
+                
 
-                    Descricao: object.response,
-                    idGruposStatusCheckList: groupid.id
-             })
+                } else {
 
-             await response.save()
+                    let groupresult;
+                    group.Grupo === parseFloat(group.Grupo) + 1 ? groupresult = 
+                    await group.Grupo : groupresult = 
+                    await '00'+ (parseFloat(group.Grupo) +1) ;
+                
+                   let groupadd =
+                   await Group.build({
+       
+                       Grupo: groupresult
+                   })
+       
+                  await groupadd.save()
+       
+                   let groupid =
+       
+                   await Group.find({
+                       raw:true,
+                       attributes:['id'],
+                       limit:1,
+                       order:[ ['Grupo','DESC'] ]
+                       })
+       
+               
+               let response =
+                    await Responses.build({
+       
+                           Descricao: object.response,
+                           idGruposStatusCheckList: groupid.id
+                    })
+       
+                    await response.save()
+       
+               let question = 
+       
+                   await Questions.update(
+       
+                       { idGruposStatusCheckList: groupid.id },
+                       { where: { id: object.idquestion } }
+                   )
+       
+                   return question;
 
-        let question = 
+                }
 
-            await Questions.update(
-
-                { idGruposStatusCheckList: groupid.id },
-                { where: { id: object.idquestion } }
-            )
-
-            return question;
-
-    } catch (e) {
+ } catch (e) {
 
         console.log(e)
         throw new Error (e)

@@ -292,7 +292,8 @@ exports.listQuizByAF = async (id) => {
                 +' INNER JOIN ModelosQuestionarios MQ ON MQ.idQuestionario = Q.id ' + "\n"
                 +' INNER JOIN Modelos Mo ON MQ.idModelos = Mo.id ' + "\n"
                 +' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
-                +' WHERE Ma.CodigoExibicao = '+id+' AND (MQ.Inativo <> 1) ' + "\n"
+                +' WHERE Ma.CodigoExibicao = '+id+' AND (MQ.Inativo = 0 OR MQ.Inativo IS NULL ) ' + "\n"
+                +' AND ( Q.Inativo = 0 OR Q.Inativo IS NULL)'
                 +' GROUP BY Q.nome '
             ,{type:sequelize.QueryTypes.SELECT})
 

@@ -301,7 +301,8 @@ const InsertItensChecklistModelos = async (data) => {
 
 const InsertStatusChecklists = async (data) => {
     try {
-        for (let i = 0; i < data.length - 1; i++) {
+
+        for (let i = 0; i < data.length; i++) {
             await
                 Sequelize.query('INSERT INTO StatusCheckLists (Descricao, idGruposStatusCheckList) VALUES '
                     + ' (' + "'" + data[i].resposta + "'" + ',' + aux + ')', { type: sequelize.QueryTypes.INSERT })
@@ -461,21 +462,21 @@ exports.PostOutmachines = async (data) => {
 
             await SelectSaidasMaquinasChecklist().catch((e) => { return t.rollback() })
 
-            await InsertCheklistModelos(data).catch((e) => { return t.rollback() })
+            // await InsertCheklistModelos(data).catch((e) => { return t.rollback() })
 
             await SelectGrupoStatusChecklist().catch((e) => { return t.rollback() })
 
             await SelectGrupoStatusChecklistId().catch((e) => { return t.rollback() })
 
-            await InsertGruposStatusChecklist().catch((e) => { return t.rollback() })
+            // await InsertGruposStatusChecklist().catch((e) => { return t.rollback() })
 
             await SelectChecklistModelos().catch((e) => { return t.rollback() })
 
-            await InsertItensChecklistModelos(data).catch((e) => { return t.rollback() })
+            // await InsertItensChecklistModelos(data).catch((e) => { return t.rollback() })
 
             await SelectItensChecklistModelos().catch((e) => { return t.rollback() })
 
-            await InsertStatusChecklists(data).catch((e) => { return t.rollback() })
+            // await InsertStatusChecklists(data).catch((e) => { return t.rollback() })
 
             await SelectStatusChecklist().catch((e) => { return t.rollback() })
 
