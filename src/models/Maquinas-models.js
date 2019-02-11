@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 const Models = require('../models/Modelos-models')
 
 const Maquinas = sequelize.define('Maquinas', {
+
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -146,11 +147,11 @@ const Maquinas = sequelize.define('Maquinas', {
     Patrimonio:{
         type: Sequelize.STRING,
         defaultValue: null
-    },
+    }
 
-},
-
-);
+},{
+    timestamps:true
+});
 
 // force: Se True , Substiu a tabela existente
 Maquinas.sync({ force: false }).then(() => {

@@ -14,6 +14,7 @@ exports.listQuestions = async () => {
                 attributes: ['Descricao', 'id'],
                 group: ['Descricao'],
                 order: [['id', 'ASC']]
+                
 
             })
 

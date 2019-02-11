@@ -145,9 +145,10 @@ exports.questionsAndAnswersByQuiz = async (req, res, next) => {
             await Repository.questionsAndAnswersByQuiz(id)
            //console.log(data)
         
-        array.push({ Altura: data[0].Altura, AF: data[0].CodigoExibicao, TipoModelo: data[0].TipoModelo, Modelo: data[0].Modelo })
-        data.forEach(res => {
+        array.push({ Altura: data[0].Altura, AF: data[0].CodigoExibicao, Modelo: data[0].Modelo })
 
+        data.forEach(res => {
+            
             let index = rearangeArray.indexOf(res.Perguntas)
 
             if (index == -1) {
@@ -167,7 +168,8 @@ exports.questionsAndAnswersByQuiz = async (req, res, next) => {
                 array.push({
                     perguntas: res.Perguntas, idModelo: res.idModelo, fotos: fotos,
                     idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "",
-                    respostas: respostas,
+                    respostas: respostas, idPergunta: res.idPergunta, idResposta: res.idResposta,
+                    idGruposStatusCheckList:res.idGruposStatusCheckList
                 })
 
                 rearangeArray.push(res.Perguntas);
