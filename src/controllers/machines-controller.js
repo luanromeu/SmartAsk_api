@@ -5,14 +5,17 @@ const ftp = require('../services/ftp-service')
 
 
 exports.listOutChecklists = async (req, res, next) => {
+    
+    try {
 
-         let filterOption = req.params.filterOption;
-         filterOption = JSON.parse(filterOption)
+       
+        let filterOption = JSON.parse(req.params.filterOption)
+      
+         //console.log(req.params.filterOption)
          let filterParam = null;
          let startDate = null;
          let endDate = null;
             
-        try {
 
                  if (filterOption.checklistNumber != "" ) {
 
@@ -29,12 +32,6 @@ exports.listOutChecklists = async (req, res, next) => {
                                         filterParam = filterOption.machineModel;
                                         filterOption = 'Mo.Modelo';
                 
-                                            } else if(filterOption.machineHeight != "" ){
-                                                
-                                                filterParam = filterOption.machineHeight
-                                                filterOption = 'Right(Mo.ApelidoOLD, 2)'
-
-
                                             } else if(filterOption.checklistDateStart != "" &&  filterOption.checklistDateEnd != "" ) {
 
                                                 startDate = filterOption.checklistDateStart
@@ -75,9 +72,10 @@ exports.listOutChecklists = async (req, res, next) => {
                 }) 
                 throw new Error(e)
                  
-             }
+            }
     
         } catch (e) {
+
             res.status(500).send({
                 message: "Falha ao processar requisição"
             })
@@ -85,28 +83,6 @@ exports.listOutChecklists = async (req, res, next) => {
         }
 }
 
-exports.listOutChecklistItens = async (req, res, next) => {
-
-    try {
-       
-        let filterParam = req.params.filterParam;
-        let rearangeArray = [];
-        let resultArray = [];
-
-        var data =
-            await Repository.listOutChecklistItens(filterParam)
-
-        
-        res.status(200).send(data)
-
-    } catch (error) {
-        res.status(500).send({
-            message: "Falha ao processar requisição"
-        })
-        console.log(error)
-    }
-
-}
 
 
 exports.listModels = async (req, res, next) => {
@@ -118,8 +94,9 @@ exports.listModels = async (req, res, next) => {
             data.forEach(res => {
                 models.push(
                     {
-                       Modelo:res.Modelo,
-                       id:res.id
+                       Modelo: res.Modelo,
+                       id: res.id,
+                       idMaquina: res.idMaquina
                     })
             })
         res.status(200).send(models)

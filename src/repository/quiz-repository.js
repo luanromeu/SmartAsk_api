@@ -43,8 +43,9 @@ exports.QuizDetails = async (idQuiz) => {
         let res =
             await Sequelize.query(
 
-                ' SELECT Mo.Modelo ,Mo.id, ICM.Descricao AS Perguntas, ICM.id AS idPergunta FROM ModelosQuestionarios MQ ' + "\n"
+                  ' SELECT Concat(Mo.Modelo," - ",Ma.CodigoExibicao) AS Modelo, Mo.id, ICM.Descricao AS Perguntas, ICM.id AS idPergunta FROM ModelosQuestionarios MQ ' + "\n"
                 + ' INNER JOIN Modelos Mo ON  MQ.idModelos = Mo.id' + "\n"
+                + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id'
                 + ' INNER JOIN Questionarios Q ON MQ.idQuestionario = Q.id' + "\n"
                 + ' INNER JOIN PerguntasQuestionarios PQ ON PQ.idQuestionario = Q.id' + "\n"
                 + ' INNER JOIN ItensCheckListModelos ICM ON PQ.idItensCheckListModelos = ICM.id' + "\n"
@@ -188,6 +189,7 @@ exports.addNewModel = async (object) => {
                     
                     { idModelos: object.idModelo },
                     { idQuestionario: object.idQuestionario }
+                    
                     
                     )
             })

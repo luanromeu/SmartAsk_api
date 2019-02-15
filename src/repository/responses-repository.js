@@ -19,6 +19,7 @@ exports.addNewReponse = async (object) => {
                 limit:1,
                 order:[ ['Grupo','DESC'] ]
                 })
+                
                
                 if (group == null || group == undefined ){
 
@@ -41,7 +42,7 @@ exports.addNewReponse = async (object) => {
         
                    await groupadd.save()
         
-                    let groupid =
+                 let groupid =
         
                     await Group.find({
                         raw:true,
@@ -74,9 +75,7 @@ exports.addNewReponse = async (object) => {
                 } else {
 
                     let groupresult;
-                    group.Grupo === parseFloat(group.Grupo) + 1 ? groupresult = 
-                    await group.Grupo : groupresult = 
-                    await '00'+ (parseFloat(group.Grupo) +1) ;
+                    group.Grupo === parseFloat(group.Grupo) + 1 ? groupresult = await group.Grupo : groupresult = await '00'+ parseFloat(group.Grupo) +1 ;
                 
                    let groupadd =
                    await Group.build({
