@@ -288,7 +288,7 @@ exports.listQuizByAF = async (id) => {
 
         let res =  
             await Sequelize.query(
-                 ' SELECT Q.nome, Q.id ' + "\n"
+                 ' SELECT Q.nome, Q.id, Ma.id AS idMaquina ' + "\n"
                 +' FROM PerguntasQuestionarios PQ '  + "\n"
                 +' INNER JOIN Questionarios Q ON PQ.idQuestionario = Q.id ' + "\n"
                 +' INNER JOIN ModelosQuestionarios MQ ON MQ.idQuestionario = Q.id ' + "\n"

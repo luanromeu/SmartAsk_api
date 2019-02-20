@@ -5,173 +5,187 @@ const Responses = require('../../src/models/StatusCheckList-models')
 const Group = require('../../src/models/GruposStatusCheckList-models')
 const sequelize = require('sequelize')
 const Sequelize = require('../db')
+var idGrupo;
 
 
-exports.addNewReponse = async (object) => {
-
+exports.addNewReponse = async (object,idquestion) => {
     try {
-        
+       
         let group =
 
             await Group.find({
-                raw:true,
-                attributes:['Grupo'],
-                limit:1,
-                order:[ ['Grupo','DESC'] ]
+                raw: true,
+                attributes: ['Grupo'],
+                order: [['Grupo', 'DESC']],
+                limit: 1
+            })
+
+              
+     if (group == null || group == undefined) {
+                
+        object.map(async (array) => {
+
+            group = await {
+                Group: null
+            }
+
+            group.Grupo = 0
+
+            let groupresult;
+            groupresult =
+                await Number(group.Grupo) + 1;
+
+            let groupadd =
+                await Group.build({
+
+                    Grupo: groupresult
                 })
-                
-               
-                if (group == null || group == undefined ){
 
-                    group = {
-                        Group: null
-                    }    
-                    
-                    group.Grupo = parseFloat('001')
+            await groupadd.save()
 
-                    let groupresult;
-                     group.Grupo === parseFloat(group.Grupo) + 1 ? groupresult = 
-                     await group.Grupo : groupresult = 
-                     await '00'+ (parseFloat(group.Grupo) +1) ;
-                 
-                    let groupadd =
-                    await Group.build({
-        
-                        Grupo: groupresult
-                    })
-        
-                   await groupadd.save()
-        
-                 let groupid =
-        
-                    await Group.find({
-                        raw:true,
-                        attributes:['id'],
-                        limit:1,
-                        order:[ ['Grupo','DESC'] ]
-                        })
-        
-                
+           var  groupid =
+
+                await Group.find({
+                    raw: true,
+                    attributes: ['id'],
+                    limit: 1,
+                    order: [['Grupo', 'DESC']]
+                })
+
+
                 let response =
-                     await Responses.build({
-        
-                            Descricao: object.response,
-                            idGruposStatusCheckList: groupid.id
-                     })
-        
-                     await response.save()
-        
-                let question = 
-        
-                    await Questions.update(
-        
-                        { idGruposStatusCheckList: groupid.id },
-                        { where: { id: object.idquestion } }
-                    )
-        
-                    return question;
-                
-
-                } else {
-
-                    let groupresult;
-                    group.Grupo === parseFloat(group.Grupo) + 1 ? groupresult = await group.Grupo : groupresult = await '00'+ parseFloat(group.Grupo) +1 ;
-                
-                   let groupadd =
-                   await Group.build({
-       
-                       Grupo: groupresult
-                   })
-       
-                  await groupadd.save()
-       
-                   let groupid =
-       
-                   await Group.find({
-                       raw:true,
-                       attributes:['id'],
-                       limit:1,
-                       order:[ ['Grupo','DESC'] ]
-                       })
-       
-               
-               let response =
                     await Responses.build({
-       
-                           Descricao: object.response,
-                           idGruposStatusCheckList: groupid.id
+
+                        Descricao: array.Respostas,
+                        idGruposStatusCheckList: groupid.id
                     })
-       
-                    await response.save()
-       
-               let question = 
-       
-                   await Questions.update(
-       
-                       { idGruposStatusCheckList: groupid.id },
-                       { where: { id: object.idquestion } }
-                   )
-       
-                   return question;
 
-                }
+                await response.save()
+                
+                
+                let question =
+                
+                await Questions.update(
+                    
+                    { idGruposStatusCheckList: groupid.id},
+                    { where: { id: idquestion } }
+                    )
+                    
+                    return question;
+                })
+                return;    
 
- } catch (e) {
+        } else {
+            
+            let groupresult;
+            await group.Grupo == group.Grupo++ ? groupresult = await group.Grupo : groupresult = await group.Grupo++;
+           
+            object.map(async (array) => {
+            
+            
+            let groupadd =
+            await Group.build({
+                
+                Grupo: groupresult
+            })
+            
+            await groupadd.save()
+            
+           var groupid =
+            
+            await Group.find({
+                raw: true,
+                attributes: ['id'],
+                order: [['Grupo', 'DESC']],
+                limit: 1
+            })
+
+           
+             let response =
+                    await Responses.build({
+
+                        Descricao: array.Respostas,
+                        idGruposStatusCheckList: groupid.id
+                    })
+
+                await response.save()
+              
+                
+                let question =
+                
+                await Questions.update(
+                    
+                    { idGruposStatusCheckList: groupid.id },
+                    { where: { id: idquestion } }
+                    )
+                    
+                    return question;
+                });
+             return;       
+        }
+
+    } catch (e) {
 
         console.log(e)
-        throw new Error (e)
+        throw new Error(e)
     }
 }
 
 
 
-exports.update = async (object) => {
+exports.update = async (object, array) => {
 
     try {
-      
-        let questions = 
+        
+        let aux = JSON.parse(array)
+        console.log(aux)
+        aux.map(async (response) => {
+        
+        let questions =
+
         await Questions.find({
-                raw:true,
-                attributes:['Descricao','idGruposStatusCheckList'],
-                where:{
-                    Descricao: object.question
-                }
+            raw: true,
+            attributes: ['Descricao', 'idGruposStatusCheckList'],
+            where: {
+                Descricao: object.question
+            }
         })
-
-        let responses = 
+        
+        
+        let responses =
         await Responses.find({
-                raw:true,
-                attributes:['Descricao','idGruposStatusCheckList'],
-                where:{
-                    Descricao: object.responses
-                }
+            raw: true,
+            attributes: ['Descricao', 'idGruposStatusCheckList'],
+            where: {
+                Descricao: response.Respostas
+            }
         })
-
-        console.log(object)
-        let idGroup = questions.idGruposStatusCheckList
-
+        
+        
         if (responses != null) {
-
+            
             console.log('essa resposta ja existe....')
-           return;
+            return;
+            
         } else {
-
+            
             let newResponse =
             await Responses.build({
-
-                Descricao: object.responses,
-                idGruposStatusCheckList: idGroup
+                
+                Descricao: response.Respostas,
+                idGruposStatusCheckList: questions.idGruposStatusCheckList
             })
-
-           newResponse.save();
-           return newResponse;
+            
+            newResponse.save();
+            return newResponse;
         }
-               
         
+    } )
+
 
     } catch (e) {
 
         console.log(e)
-        throw new Error (e)
+        throw new Error(e)
     }
 }

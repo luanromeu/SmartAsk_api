@@ -7,7 +7,7 @@ const authService = require('../../src/services/auth-service');
 
 //GET
 router.get('/listoutchecklists/:filterOption', authService.authorize, controller.listOutChecklists)
-//router.get('/listoutchecklists/:filterParam', controller.listOutChecklists)
+router.get('/listoutchecklistitens/:filterParam/:idsmc', controller.listOutChecklistsitens)
 router.get('/questionsandanswersbyquiz/:id', authService.authorize, controller.questionsAndAnswersByQuiz)
 router.get('/listmachinesout/:AF', authService.authorize, controller.listMachinesOut)
 router.get('/listmodels',authService.authorize, controller.listModels)

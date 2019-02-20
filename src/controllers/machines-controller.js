@@ -10,8 +10,8 @@ exports.listOutChecklists = async (req, res, next) => {
 
        
         let filterOption = JSON.parse(req.params.filterOption)
-      
-         //console.log(req.params.filterOption)
+        
+       
          let filterParam = null;
          let startDate = null;
          let endDate = null;
@@ -84,6 +84,26 @@ exports.listOutChecklists = async (req, res, next) => {
 }
 
 
+exports.listOutChecklistsitens = async (req, res, next) => {
+
+    try {
+        const AF = JSON.parse(req.params.filterParam)
+        const idsmc =  req.params.idsmc
+        console.log(AF)
+        const data =
+            await Repository.listOutChecklistItens(AF, idsmc)
+            res.status(200).send(data)
+
+    } catch (e) {
+
+        res.status(500).send({
+            message: "Falha ao processar requisição"
+        })
+        console.log(e)
+    }
+}
+
+
 
 exports.listModels = async (req, res, next) => {
 
@@ -116,13 +136,19 @@ exports.questionsAndAnswersByQuiz = async (req, res, next) => {
 
         let array = [];
         let rearangeArray = [];
-        let id = req.query.id;
-        console.log(id)
+        let idQuestionario = req.query.id;
+        let idMaquina = req.query.idMaquina
+        console.log(req.query)
         let data =
-            await Repository.questionsAndAnswersByQuiz(id)
+            await Repository.questionsAndAnswersByQuiz(idQuestionario, idMaquina)
            //console.log(data)
         
-        array.push({ Altura: data[0].Altura, AF: data[0].CodigoExibicao, Modelo: data[0].Modelo })
+        array.push({ 
+                    Altura: data[0].Altura,
+                    AF: data[0].CodigoExibicao,
+                    Modelo: data[0].Modelo,
+                   
+            })
 
         data.forEach(res => {
             
@@ -133,21 +159,30 @@ exports.questionsAndAnswersByQuiz = async (req, res, next) => {
                 let respostas = [];
 
                 data.forEach(res2 => {
-
+                   
                     if (res.Perguntas == res2.Perguntas) {
 
                         if (respostas.indexOf(res2.Respostas) == -1)
-                            respostas.push(res2.Respostas)
+                            respostas.push({respostas:res2.Respostas, idResposta:res2.idResposta})
+                            
+                        }
+                        
+                    })
 
-                    }
-                })
                 let fotos = []
                 array.push({
-                    perguntas: res.Perguntas, idModelo: res.idModelo, fotos: fotos,
-                    idMaquinas: res.idMaquinas, observacao: res.Observacao, resposta: "", horimetro: "",
-                    respostas: respostas, idPergunta: res.idPergunta, idResposta: res.idResposta,
-                    idGruposStatusCheckList:res.idGruposStatusCheckList
+                    perguntas: res.Perguntas, 
+                    idModelo: res.idModelo, 
+                    fotos: fotos,
+                    idMaquinas: res.idMaquinas, 
+                    respostas: respostas,
+                    idPergunta: res.idPergunta,
+                    idResposta: "",
+                    horimetro:"",
+                    observacao:"",
+                    idGruposStatusCheckList: res.idGruposStatusCheckList
                 })
+                    
 
                 rearangeArray.push(res.Perguntas);
 
@@ -217,8 +252,8 @@ exports.PutOrderModel = async (req, res, next) => {
 exports.PostOut = async (req, res) => {
 
     try {
-
         let data = req.body
+       
 
         await Repository.PostOutmachines(data)
             .catch((e) => { throw new Error(e) })

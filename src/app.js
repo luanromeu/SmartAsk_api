@@ -30,6 +30,7 @@ const dblogin = require ('../src/db')
 const mlogin = require ('../src/models/login-model')
 const SaidasMaquinasCheckList = require ('../src/models/saidasmaquinaschecklist-model')
 const SaidasMaquinasItensCheckList = require ('../src/models/SaidasMaquinasItensCheckList-models')
+const SaidasMaquinasFotosCheckList = require ('../src/models/SaidasMaquinasFotosCheckList-models')
 const SaidasMaquinasItensFotosCheckList = require ('../src/models/SaidasMaquinasItensFotosCheckList-models')
 
 const StatusCheckList = require ('../src/models/StatusCheckList-models')

@@ -61,7 +61,7 @@ exports.addNewQuestion = async (object) => {
 
     
 
-    if (veryfy === null) {
+    if (veryfy === null || veryfy === undefined) {
 
         error = false;
 

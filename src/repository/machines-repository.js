@@ -1,8 +1,10 @@
 'use strict'
 
 const CheckListModelos = require('../models/CheckListModelos-models')
-const SaidasMaquinasCheckLists = require ('../models/saidasmaquinaschecklist-model')
+const SaidasMaquinasCheckLists = require('../models/saidasmaquinaschecklist-model')
 const SaidasMaquinasItensCheckLists = require('../models/SaidasMaquinasItensCheckList-models')
+const SaidasMaquinasFotosCheckList = require('../models/SaidasMaquinasFotosCheckList-models')
+const SaidasMaquinasItensFotosCheckList = require('../models/SaidasMaquinasItensFotosCheckList-models')
 const sequelize = require('sequelize')
 const Sequelize = require('../db')
 const base64ToImage = require('base64-to-image');
@@ -10,84 +12,90 @@ const ftp = require('../services/ftp-service')
 
 
 var ultimoIdSaidasMaquinasCheckList;
-var resultimage = null;
-var resultsend = null;
-var arrayImages = [];
+var ultimoIdSaidasMaquinasFotosCheckList;
+var arrayImages;
+var imageinfo = [];
+
 
 
 const InsertCheklistModelos = async (data) => {
-    
+
     try {
-    
+
         let idModelo
         data.map(result => idModelo = result.idModelo)
-    
+
         let saveCheckListModelos =
-        
-        await CheckListModelos.build({
-                    idModelos:idModelo,
-                    Inativo:'0'                
+
+            await CheckListModelos.build({
+                idModelos: idModelo,
+                Inativo: '0'
             })
-            
-            let save =
-               await saveCheckListModelos.save();
+
+        let save =
+            await saveCheckListModelos.save();
+        return save;
 
     } catch (e) {
 
         console.log(e)
-         throw new Error(e);
+        throw new Error(e);
     }
 }
 
- const InsertSaidasMaquinasChecklist = async (data) => {
+const InsertSaidasMaquinasChecklist = async (data) => {
 
     try {
         let idMaquina;
         let horimetro;
+        let observacao;
         data.map(result => idMaquina = result.idMaquinas)
         data.map(result => horimetro = result.horimetro)
-        
+        data.map(result => observacao = result.observacao)
+
+
         let SaveSaidasMaqunasChecklist =
             await SaidasMaquinasCheckLists.build({
 
-                    idMaquinas: idMaquina,
-                    Horimetro: horimetro,
-                    Data: Date.now(),
-                    idSaidasMaquinas: '',
-                    idEmpresas: '1',
-                    Inativo: '0'
+                idMaquinas: idMaquina,
+                Horimetro: horimetro,
+                Data: Date.now(),
+                idSaidasMaquinas: '',
+                idEmpresas: '1',
+                Inativo: '0',
+                Observacao: observacao
 
             })
 
-            let save =
-                await SaveSaidasMaqunasChecklist.save()
-             return save;   
+        let save =
+            await SaveSaidasMaqunasChecklist.save()
+        return save;
 
     } catch (e) {
-        
+
         console.log(e)
         throw new Error(e);
     }
- }
+}
 
 const SelectSaidasMaquinasChecklist = async () => {
-    
+
     try {
-        
-      let idSaidasMaquinasCheckList =
+
+        let idSaidasMaquinasCheckList =
             await SaidasMaquinasCheckLists.findAll({
-            raw:true,
-            attributes: ['id'],
-            order:[['id','DESC']],
-            limit: 1
+                raw: true,
+                attributes: ['id'],
+                order: [['id', 'DESC']],
+                limit: 1
             })
-            
-         idSaidasMaquinasCheckList.map(result => ultimoIdSaidasMaquinasCheckList = result.id)
-           
-             return ultimoIdSaidasMaquinasCheckList;
+
+        idSaidasMaquinasCheckList.map(result => ultimoIdSaidasMaquinasCheckList = result.id)
+
+        return ultimoIdSaidasMaquinasCheckList;
 
     } catch (e) {
-        
+
         console.log(e)
         throw new Error(e);
     }
@@ -96,67 +104,172 @@ const SelectSaidasMaquinasChecklist = async () => {
 const InsertSaidasMaquinasItensCheckLists = async (data) => {
 
     try {
-    
-     data.forEach(async result => {
+
+        data.forEach(async result => {
 
 
-        let saveSaidasMaquinasItensCheckList = 
-            await SaidasMaquinasItensCheckLists.build({
+            let saveSaidasMaquinasItensCheckList =
+                await SaidasMaquinasItensCheckLists.build({
 
                     idSaidasMaquinasCheckList: String(ultimoIdSaidasMaquinasCheckList),
                     idItensCheckListModelos: result.idPergunta,
                     idStatusCheckList: result.idResposta,
                     Inativo: '0',
                     idGruposStatusCheckList: result.idGruposStatusCheckList
-            })
+                })
 
             let save =
-            await saveSaidasMaquinasItensCheckList.save()
+                await saveSaidasMaquinasItensCheckList.save()
 
             return save;
-        
+
         });
-            return ;
-        
+        return;
+
     } catch (e) {
-        
+
         console.log(e)
         throw new Error(e);
     }
 }
 
 
+const insertSaidasMaquinasFotosCheckLists = async () => {
+
+    try {
+
+        let SMFC =
+            await SaidasMaquinasFotosCheckList.build({
+
+                Data: Date.now(),
+                idSaidasMaquinasCheckList: String(ultimoIdSaidasMaquinasCheckList),
+                Inativo: '0'
+            })
+
+        let save =
+            await SMFC.save();
+        return save;
+
+    } catch (e) {
+
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+const SelectSaidasMaquinasFotosChecklist = async () => {
+
+    try {
+
+        let idSaidasMaquinasFotosCheckList =
+            await SaidasMaquinasFotosCheckList.findAll({
+                raw: true,
+                attributes: ['id'],
+                order: [['id', 'DESC']],
+                limit: 1
+            })
+
+        idSaidasMaquinasFotosCheckList.map(result => ultimoIdSaidasMaquinasFotosCheckList = result.id)
+
+        return ultimoIdSaidasMaquinasFotosCheckList;
+
+    } catch (e) {
+
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+const ConvertAndSaveImages = async (data) => {
+
+    try {
+        let pathDev = '/home/luan/Documentos';
+        let path = '/home/tetsistemas/web/imagens.tetsistemas.com.br/public_html/checklist/Locar'
+        let optionalObj = { 'type': 'jpg' };
+        let promisse =
+            await data.map(async (result) => {
+
+                let subpromisse =
+                    await result.fotos.map(async (res) => {
+                        imageinfo.push(base64ToImage(res, path, optionalObj));
+
+                        return imageinfo
+                    })
+
+                return subpromisse
+            })
+        return promisse;
+    } catch (e) {
+
+        console.log(e)
+        throw new Error(e);
+    }
+}
+
+const InsertSaidasMaquinasItensFotosCheckLists = async (imageinfo) => {
+
+    try {
+
+        let path = 'http://imagens.tetsistemas.com.br/checklist/Locar/'
+
+        imageinfo.map(async (result) => {
+
+            let SMIFC =
+                await SaidasMaquinasItensFotosCheckList.build({
+                    idSaidasMaquinasFotosCheckList: ultimoIdSaidasMaquinasFotosCheckList,
+                    Imagem: path + String(result.fileName),
+
+                });
+
+            let save =
+                await SMIFC.save();
+            return save;
+
+        })
+        return;
+
+
+    } catch (e) {
+
+        console.log(e)
+        throw new Error(e);
+    }
+}
 
 exports.PostOutmachines = async (data) => {
     try {
 
         await Sequelize.transaction({ autocommit: true }, async (t) => {
 
-        
+
             await InsertCheklistModelos(data).catch((e) => { return t.rollback() })
-          
+
             await InsertSaidasMaquinasChecklist(data).catch((e) => { return t.rollback() })
 
             await SelectSaidasMaquinasChecklist().catch((e) => { return t.rollback() })
 
             await InsertSaidasMaquinasItensCheckLists(data).catch((e) => { return t.rollback() })
 
-        // await SendImagesToWeb(data, '/home/luan/Desktop', '/checklist/', { type: 'jpg' }).catch((e) => { return t.rollback() })
+            await insertSaidasMaquinasFotosCheckLists().catch((e) => { return t.rollback() })
 
-         //  await InsertImages().catch((e) => { return t.rollback() })
+            await SelectSaidasMaquinasFotosChecklist().catch((e) => { return t.rollback() })
 
-        // await SaidasMaquinasItensFotosCheckLists(arrayImages).catch((e) => { return t.rollback() })
+            await ConvertAndSaveImages(data).catch((e) => { return t.rollback() })
+
+            await InsertSaidasMaquinasItensFotosCheckLists(imageinfo).catch((e) => { return t.rollback() })
 
         })
+
+        return;
 
     } catch (e) {
         console.log(e)
         throw new Error(e);
     }
 }
-          
 
-           
+
+
 
 
 
@@ -210,13 +323,13 @@ exports.listModels = async () => {
     try {
         let res =
             await Sequelize.query(
-                  ' SELECT  Mo.id, Concat(Mo.Modelo, " - " , Ma.CodigoExibicao) As Modelo , Ma.id AS idMaquina' + "\n" 
+                ' SELECT  Mo.id, Concat(Mo.Modelo, " - " , Ma.CodigoExibicao) As Modelo , Ma.id AS idMaquina' + "\n"
                 + ' FROM Modelos Mo' + "\n"
                 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id' + "\n"
                 + ' WHERE Mo.Inativo = 0 OR Mo.Inativo IS NULL' + "\n"
                 + ' AND  Ma.Inativo = 0 OR Ma.Inativo IS NULL' + "\n"
-                + ' AND  Ma.idModelos <> NULL '  
-                
+                + ' AND  Ma.idModelos <> NULL '
+
                 , { type: sequelize.QueryTypes.SELECT })
 
         return res;
@@ -242,22 +355,24 @@ exports.PutOrderModel = async (object, position) => {
 
 
 
-exports.listOutChecklistItens = async (filterOption, filterParam) => {
+exports.listOutChecklistItens = async (AF, idsmc) => {
     const result =
         await Sequelize.query(
-             ' SELECT ICM.Descricao AS Perguntas, SC.Descricao AS Respostas' + "\n"
-            +' FROM SaidasMaquinasItensCheckLists SMIC'+ "\n"
-            +' INNER JOIN SaidasMaquinasCheckLists SMC ON SMC.id = SMIC.idSaidasMaquinasCheckList'+ "\n"
-            +' INNER JOIN ItensCheckListModelos ICM ON ICM.id = SMIC.idItensCheckListModelos'+ "\n"
-            +' INNER JOIN StatusCheckLists SC ON SC.id = SMIC.idStatusCheckList'+ "\n"
-            +' INNER JOIN Maquinas Ma ON Ma.id = SMC.idMaquinas'+ "\n"
-            +' WHERE ' + filterOption + '=' + "'" + filterParam + "'" +' ORDER BY SMC.Data'
+            ' SELECT SMC.id, ICM.Descricao AS Perguntas, SC.Descricao AS Respostas' + "\n"
+            + ' FROM SaidasMaquinasItensCheckLists SMIC' + "\n"
+            + ' INNER JOIN SaidasMaquinasCheckLists SMC ON SMC.id = SMIC.idSaidasMaquinasCheckList' + "\n"
+            + ' INNER JOIN ItensCheckListModelos ICM ON ICM.id = SMIC.idItensCheckListModelos' + "\n"
+            + ' INNER JOIN StatusCheckLists SC ON SC.id = SMIC.idStatusCheckList' + "\n"
+            + ' INNER JOIN GruposStatusCheckLists GSC ON GSC.id = SMIC.idGruposStatusCheckList' + "\n"
+            + ' INNER JOIN Maquinas Ma ON Ma.id = SMC.idMaquinas'
+            + ' WHERE Ma.CodigoExibicao = ' + AF + ' AND SMC.id=' +idsmc + '' + "\n"
+            + ' ORDER BY SMC.id ' + "\n"
             , { type: sequelize.QueryTypes.SELECT })
             .catch((e) => {
                 console.log('ERRO AO LISTAR CHECKLISTS ', e)
                 throw new Error(e);
             })
-            return result;
+    return result;
 }
 
 
@@ -265,68 +380,68 @@ exports.listOutChecklistItens = async (filterOption, filterParam) => {
 exports.listOutChecklists = async (filterOption, filterParam) => {
     const result =
         await Sequelize.query(
-     'SELECT SMC.id AS NumeroCheckList, SMC.Data, Ma.CodigoExibicao, TP.TipoModelo ' + "\n"
-    +'FROM SaidasMaquinasCheckLists SMC' + "\n"
-    +'INNER JOIN  Maquinas Ma ON SMC.idMaquinas = Ma.id' + "\n"
-    +'INNER JOIN Modelos Mo ON Ma.idModelos = Mo.id' + "\n"
-    +'INNER JOIN TiposModelos TP ON Mo.idTiposModelos = TP.id' + "\n"
-    +'WHERE '+ filterOption + ' = '+ "'" + filterParam + "'" +'  ORDER BY SMC.Data'
+            'SELECT SMC.id AS NumeroCheckList, SMC.Data, Ma.CodigoExibicao, TP.TipoModelo ' + "\n"
+            + 'FROM SaidasMaquinasCheckLists SMC' + "\n"
+            + 'INNER JOIN  Maquinas Ma ON SMC.idMaquinas = Ma.id' + "\n"
+            + 'INNER JOIN Modelos Mo ON Ma.idModelos = Mo.id' + "\n"
+            + 'INNER JOIN TiposModelos TP ON Mo.idTiposModelos = TP.id' + "\n"
+            + 'WHERE ' + filterOption + ' = ' + "'" + filterParam + "'" + '  ORDER BY SMC.Data'
 
             , { type: sequelize.QueryTypes.SELECT })
             .catch((e) => {
                 console.log('ERRO AO LISTAR CHECKLISTS ', e)
                 throw new Error(e);
             })
-            return result;
+    return result;
 }
 
-exports.listOutChecklistsDate = async ( startDate, endDate, filterOption) => {
+exports.listOutChecklistsDate = async (startDate, endDate, filterOption) => {
     const result =
         await Sequelize.query(
-     'SELECT SMC.id AS NumeroCheckList, SMC.Data, Ma.CodigoExibicao, TP.TipoModelo ' + "\n"
-    +'FROM SaidasMaquinasCheckLists SMC' + "\n"
-    +'INNER JOIN  Maquinas Ma ON SMC.idMaquinas = Ma.id' + "\n"
-    +'INNER JOIN Modelos Mo ON Ma.idModelos = Mo.id' + "\n"
-    +'INNER JOIN TiposModelos TP ON Mo.idTiposModelos = TP.id' + "\n"
-    +'WHERE '+ filterOption + ' >= ' + "'" + startDate + "'" + ' AND ' + filterOption + ' <= ' + "'" + endDate + "'" + '' +"\n"
-    +' ORDER BY SMC.Data'
+            'SELECT SMC.id AS NumeroCheckList, SMC.Data, Ma.CodigoExibicao, TP.TipoModelo ' + "\n"
+            + 'FROM SaidasMaquinasCheckLists SMC' + "\n"
+            + 'INNER JOIN  Maquinas Ma ON SMC.idMaquinas = Ma.id' + "\n"
+            + 'INNER JOIN Modelos Mo ON Ma.idModelos = Mo.id' + "\n"
+            + 'INNER JOIN TiposModelos TP ON Mo.idTiposModelos = TP.id' + "\n"
+            + 'WHERE ' + filterOption + ' >= ' + "'" + startDate + "'" + ' AND ' + filterOption + ' <= ' + "'" + endDate + "'" + '' + "\n"
+            + ' ORDER BY SMC.Data'
             , { type: sequelize.QueryTypes.SELECT })
             .catch((e) => {
                 console.log('ERRO AO LISTAR CHECKLISTS POR DATA ', e)
                 throw new Error(e);
             })
-            return result;
+    return result;
 }
 
 
 
-exports.questionsAndAnswersByQuiz = async (id) => {
+exports.questionsAndAnswersByQuiz = async (idQuestionario, idMaquina) => {
 
 
     const result =
         await
             Sequelize.query(
+                ' SELECT  ICM.Descricao AS Perguntas,ICM.id AS idPergunta,' + "\n"
+                + ' SC.Descricao AS Respostas, SC.id AS idResposta,' + "\n"
+                + ' SC.idGruposStatusCheckList, Mo.Modelo ,Mo.id AS idModelo, ' + "\n"
+                + ' Right(Mo.ApelidoOLD, 2) AS Altura,  Ma.CodigoExibicao, Ma.id AS idMaquinas' + "\n"
+                + ' FROM ModelosQuestionarios MQ' + "\n"
+                + ' INNER JOIN Modelos Mo ON  MQ.idModelos = Mo.id' + "\n"
+                + ' INNER JOIN Questionarios Q ON MQ.idQuestionario = Q.id' + "\n"
+                + ' INNER JOIN PerguntasQuestionarios PQ ON PQ.idQuestionario = Q.id' + "\n"
+                + ' INNER JOIN ItensCheckListModelos ICM ON PQ.idItensCheckListModelos = ICM.id' + "\n"
+                + ' INNER JOIN GruposStatusCheckLists GSC ON ICM.idGruposStatusCheckList = GSC.id' + "\n"
+                + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id' + "\n"
+                + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id' + "\n"
+                + ' WHERE Q.id = ' + idQuestionario + ' AND Ma.id = ' + idMaquina + '' + "\n"
+                + ' AND (Q.Inativo  = 0  OR  Q.Inativo IS NULL)' + "\n"
+                + ' AND (PQ.Inativo = 0 OR PQ.Inativo IS NULL)' + "\n"
+                + ' AND (MQ.Inativo = 0 OR MQ.Inativo IS NULL )' + "\n"
+                + ' AND (Ma.Inativo = 0 OR Ma.Inativo IS NULL)' + "\n"
+                + ' AND (Mo.Inativo = 0 OR Mo.Inativo IS NULL)' + "\n"
 
-                 ' SELECT SC.idGruposStatusCheckList, ICM.id AS idPergunta, SC.id AS idResposta, Mo.Modelo ,Mo.id AS idModelo, ICM.Descricao AS Perguntas, ICM.id AS idPerguntas,' + "\n"
-                + ' SC.Descricao AS Respostas, SC.id AS idRespostas, Right(Mo.ApelidoOLD, 2) AS Altura, Ma.CodigoExibicao, ' + "\n"
-                + ' Ma.id AS idMaquinas' + "\n"
-                + ' FROM ModelosQuestionarios MQ ' + "\n"
-                + ' INNER JOIN Modelos Mo ON  MQ.idModelos = Mo.id ' + "\n"
-                + ' INNER JOIN Questionarios Q ON MQ.idQuestionario = Q.id ' + "\n"
-                + ' INNER JOIN PerguntasQuestionarios PQ ON PQ.idQuestionario = Q.id ' + "\n"
-                + ' INNER JOIN ItensCheckListModelos ICM ON PQ.idItensCheckListModelos = ICM.id ' + "\n"
-                + ' INNER JOIN GruposStatusCheckLists GSC ON ICM.idGruposStatusCheckList = GSC.id ' + "\n"
-                + ' INNER JOIN StatusCheckLists SC ON SC.idGruposStatusCheckList = GSC.id ' + "\n"
-                + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id ' + "\n"
-                + ' WHERE Q.id = '+id+'' + "\n"
-                + ' AND (Q.Inativo = 0 OR Q.Inativo IS NULL) ' + "\n"
-                + ' AND (PQ.Inativo = 0 OR  PQ.Inativo IS NULL) '  + "\n"
-                + ' AND (MQ.Inativo = 0 OR MQ.Inativo IS NULL ) ' + "\n"
-                + ' AND (Ma.Inativo = 0 OR Ma.Inativo IS NULL)' + "\n"   
-                + ' AND (Mo.Inativo = 0 OR Mo.Inativo IS NULL) '  
+                , { type: sequelize.QueryTypes.SELECT })
 
-                ,{ type: sequelize.QueryTypes.SELECT })
-                
 
                 .catch((e) => {
                     console.log('ERRO AO PESQUISAR MAQUINA POR AF ', e)

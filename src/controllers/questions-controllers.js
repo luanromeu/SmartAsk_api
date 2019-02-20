@@ -84,15 +84,16 @@ exports.addNewQuestion = async (req, res, next) => {
 
     try {
         let object = req.query
-   
+        let array = JSON.parse(req.query.responses)
+        
         let error =
             await Repository.addNewQuestion(object)
 
 
         if (error === true) {
-
+           
         let update =
-         await Responses.update(object)
+         await Responses.update(object, array)
 
          res.status(200).send({
              message:"Respostas atualizadas com sucesso",
@@ -107,7 +108,7 @@ exports.addNewQuestion = async (req, res, next) => {
                 error
 
             })
-        }
+       }
 
 
 
