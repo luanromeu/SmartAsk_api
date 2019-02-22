@@ -39,8 +39,8 @@ const CheckListModelos = require ('../src/models/CheckListModelos-models')
 const ItensCheckListModelos = require ('../src/models/ItensCheckListModelos-models')
 
 const EntradasMaquinasCheckList = require ('../src/models/EntradasMaquinasCheckList-models')
+const EntradasMaquinasFotosCheckLists = require ('../src/models/EntradaMaquinasFotosCheckLists-models')
 const EntradasMaquinasItensCheckList = require ('../src/models/EntradasMaquinasItensCheckList-models')
-
 const EntradasMaquinasItensFotosCheckList = require ('../src/models/EntradasMaquinasItensFotosCheckList-models')
 const Maquinas = require ('../src/models/Maquinas-models')
 const Modelos = require ('../src/models/Modelos-models')

@@ -53,7 +53,9 @@ exports.listTasksAndResponses = async (req, res, next) => {
         let idquestion = req.query.id
         let data =
             await Repository.listTasksAndResponses(idquestion)
-     
+     if (data == null || data == undefined)
+        res.send(data)
+        else
         data.forEach(res => {
 
             let index = data.indexOf(res.Respostas)

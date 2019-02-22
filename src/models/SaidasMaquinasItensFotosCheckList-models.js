@@ -14,6 +14,10 @@ const SaidasMaquinasItensFotosCheckList = sequelize.define('SaidasMaquinasItensF
         type: Sequelize.TINYINT,
         defaultValue: null,
     },
+    idItensCheckListModelos: {
+        type: Sequelize.STRING,
+        defaultValue:null
+    }
   
     
 });
