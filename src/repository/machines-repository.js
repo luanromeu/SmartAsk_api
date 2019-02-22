@@ -190,7 +190,7 @@ const ConvertAndSaveImages = async (data) => {
 
     try {
         let pathDev = '/var/www/html/fotos/';
-        let path = '/home/tetsistemas/web/imagens.tetsistemas.com.br/public_html/checklist/Locar'
+        let path = '/home/tetsistemas/web/imagens.tetsistemas.com.br/public_html/checklist/Locar/'
         let optionalObj = { 'type': 'jpg' };
         let promisse =
             await data.map(async (result) => {
