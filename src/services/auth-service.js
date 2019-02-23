@@ -27,6 +27,7 @@ exports.authorize = function (req, res, next) {
             message: 'Access Denied'
         });
     } else {
+        
         jwt.verify(token, global.SALT_KEY, function (error, decoded) {
             if (error) {
                 res.status(401).json({

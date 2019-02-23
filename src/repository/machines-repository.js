@@ -13,6 +13,7 @@ const sequelize = require('sequelize')
 const Sequelize = require('../db')
 const base64ToImage = require('base64-to-image');
 const ftp = require('../services/ftp-service')
+const config = require ('../../config')
 
 
 var ultimoIdSaidasMaquinasCheckList;
@@ -189,8 +190,6 @@ const SelectSaidasMaquinasFotosChecklist = async () => {
 const ConvertAndSaveImages = async (data) => {
 
     try {
-        let pathDev = '/var/www/html/fotos/';
-        let path = '/home/tetsistemas/web/imagens.tetsistemas.com.br/public_html/checklist/Locar/'
         let optionalObj = { 'type': 'jpg' };
         let promisse =
             await data.map(async (result) => {
@@ -199,7 +198,7 @@ const ConvertAndSaveImages = async (data) => {
                     await result.fotos.map(async (res) => {
                     
                         imageinfo.push({
-                            image: base64ToImage(res, path, optionalObj),
+                            image: base64ToImage(res, config.PATH_SAVE, optionalObj),
                             id: result.idPergunta,
                             idchecklist: result.NumeroCheckList
                         });
@@ -220,9 +219,6 @@ const ConvertAndSaveImages = async (data) => {
 const InsertSaidasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
 
     try {
-
-        let path = 'http://imagens.tetsistemas.com.br/checklist/Locar/'
-        let pathDev = 'http://192.168.0.17/fotos/'
      
         data.map(async (result) => {
             console.log(imageinfo)
@@ -234,7 +230,7 @@ const InsertSaidasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
                 let SMIFC =
                 await SaidasMaquinasItensFotosCheckList.build({
                     idSaidasMaquinasFotosCheckList: ultimoIdSaidasMaquinasFotosCheckList,
-                    Imagem: path + String(res.image.fileName), 
+                    Imagem: config.PATH_LOAD + String(res.image.fileName), 
                     idItensCheckListModelos: result.idPergunta
                     
                 })
@@ -433,9 +429,6 @@ const SelectEntradaMaquinasFotosChecklist = async () => {
 const InsertEntradasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
 
     try {
-
-        let path = 'http://imagens.tetsistemas.com.br/checklist/Locar/'
-        let pathDev = 'http://192.168.0.17/fotos/'
      
         data.map(async (result) => {
             console.log(imageinfo)
@@ -447,7 +440,7 @@ const InsertEntradasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
                 let EMIFC =
                 await EntradaMaquinasItensFotosCheckLists.build({
                     idEntradasMaquinasFotosCheckList: ultimoIdEntradasMaquinasFotosCheckLists,
-                    Imagem: path + String(res.image.fileName), 
+                    Imagem: config.PATH_LOAD + String(res.image.fileName), 
                     idItensCheckListModelos: result.idPergunta
                     
                 })
