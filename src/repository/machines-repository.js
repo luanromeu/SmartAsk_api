@@ -199,7 +199,7 @@ const ConvertAndSaveImages = async (data) => {
                     await result.fotos.map(async (res) => {
                     
                         imageinfo.push({
-                            image: base64ToImage(res, pathDev, optionalObj),
+                            image: base64ToImage(res, path, optionalObj),
                             id: result.idPergunta,
                             idchecklist: result.NumeroCheckList
                         });
@@ -234,7 +234,7 @@ const InsertSaidasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
                 let SMIFC =
                 await SaidasMaquinasItensFotosCheckList.build({
                     idSaidasMaquinasFotosCheckList: ultimoIdSaidasMaquinasFotosCheckList,
-                    Imagem: pathDev + String(res.image.fileName), 
+                    Imagem: path + String(res.image.fileName), 
                     idItensCheckListModelos: result.idPergunta
                     
                 })
@@ -447,7 +447,7 @@ const InsertEntradasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
                 let EMIFC =
                 await EntradaMaquinasItensFotosCheckLists.build({
                     idEntradasMaquinasFotosCheckList: ultimoIdEntradasMaquinasFotosCheckLists,
-                    Imagem: pathDev + String(res.image.fileName), 
+                    Imagem: path + String(res.image.fileName), 
                     idItensCheckListModelos: result.idPergunta
                     
                 })
