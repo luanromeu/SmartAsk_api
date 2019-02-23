@@ -172,7 +172,7 @@ exports.listChecklistsitens = async (req, res, next) => {
         const id = req.params.id
         const type = req.params.type
 
-        console.log(type)
+        console.log('asdasd',req.params.id)
 
             if (type === 'saida') {
 

@@ -194,14 +194,14 @@ const ConvertAndSaveImages = async (data) => {
         let optionalObj = { 'type': 'jpg' };
         let promisse =
             await data.map(async (result) => {
-
+                console.log('asdas',result)
                 let subpromisse =
                     await result.fotos.map(async (res) => {
-                
+                    
                         imageinfo.push({
-                            image: base64ToImage(res, path, optionalObj),
+                            image: base64ToImage(res, pathDev, optionalObj),
                             id: result.idPergunta,
-                            idc: result.idsmc
+                            idchecklist: result.NumeroCheckList
                         });
 
                         return imageinfo
@@ -222,11 +222,11 @@ const InsertSaidasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
     try {
 
         let path = 'http://imagens.tetsistemas.com.br/checklist/Locar/'
-        let pathDev = 'http://10.10.0.2/fotos/'
+        let pathDev = 'http://192.168.0.17/fotos/'
      
         data.map(async (result) => {
             console.log(imageinfo)
-            let dataImages = imageinfo.filter(image => image.id == result.idPergunta && image.idc == result.idsmc)
+            let dataImages = imageinfo.filter(image => image.id == result.idPergunta && image.idc == result.NumeroCheckList)
             dataImages.map(async(res) => {
                 
                 
@@ -234,7 +234,7 @@ const InsertSaidasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
                 let SMIFC =
                 await SaidasMaquinasItensFotosCheckList.build({
                     idSaidasMaquinasFotosCheckList: ultimoIdSaidasMaquinasFotosCheckList,
-                    Imagem: path + String(res.image.fileName), 
+                    Imagem: pathDev + String(res.image.fileName), 
                     idItensCheckListModelos: result.idPergunta
                     
                 })
@@ -339,7 +339,7 @@ const SelectEntradasMaquinasChecklist = async () => {
                 order: [['id', 'DESC']],
                 limit: 1
             })
-
+         
             idEntradaMaquinasCheckList.map(result => ultimoIdEntradasMaquinasCheckList = result.id)
 
         return ultimoIdEntradasMaquinasCheckList;
@@ -435,11 +435,11 @@ const InsertEntradasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
     try {
 
         let path = 'http://imagens.tetsistemas.com.br/checklist/Locar/'
-        let pathDev = 'http://10.10.0.2/fotos/'
+        let pathDev = 'http://192.168.0.17/fotos/'
      
         data.map(async (result) => {
             console.log(imageinfo)
-            let dataImages = imageinfo.filter(image => image.id == result.idPergunta && image.idc == result.idsmc)
+            let dataImages = imageinfo.filter(image => image.id == result.idPergunta && image.idc == result.NumeroCheckList)
             dataImages.map(async(res) => {
                 
                 
@@ -447,7 +447,7 @@ const InsertEntradasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
                 let EMIFC =
                 await EntradaMaquinasItensFotosCheckLists.build({
                     idEntradasMaquinasFotosCheckList: ultimoIdEntradasMaquinasFotosCheckLists,
-                    Imagem: path + String(res.image.fileName), 
+                    Imagem: pathDev + String(res.image.fileName), 
                     idItensCheckListModelos: result.idPergunta
                     
                 })
@@ -595,7 +595,7 @@ exports.PutOrderModel = async (object, position) => {
 exports.listOutChecklistItens = async (AF, idsmc) => {
     const result =
         await Sequelize.query(
-            ' SELECT SMC.id AS idsmc,ICM.id AS idPergunta, ICM.Descricao AS Perguntas, SC.Descricao AS Respostas' + "\n"
+            ' SELECT SMC.id AS NumeroCheckList,ICM.id AS idPergunta, ICM.Descricao AS Perguntas, SC.Descricao AS Respostas' + "\n"
             + ' FROM SaidasMaquinasItensCheckLists SMIC' + "\n"
             + ' INNER JOIN SaidasMaquinasCheckLists SMC ON SMC.id = SMIC.idSaidasMaquinasCheckList' + "\n"
             + ' INNER JOIN ItensCheckListModelos ICM ON ICM.id = SMIC.idItensCheckListModelos' + "\n"
@@ -740,7 +740,7 @@ exports.listImagesByItensInputChecklist = async (iditem, id) => {
 exports.listInputChecklistItens = async (AF, id) => {
     const result =
         await Sequelize.query(
-            ' SELECT EMC.id AS idemc,ICM.id AS idPergunta, ICM.Descricao AS Perguntas, SC.Descricao AS Respostas' + "\n"
+            ' SELECT EMC.id AS NumeroCheckList,ICM.id AS idPergunta, ICM.Descricao AS Perguntas, SC.Descricao AS Respostas' + "\n"
             + ' FROM EntradasMaquinasItensCheckLists EMIC' + "\n"
             + ' INNER JOIN EntradasMaquinasCheckLists EMC ON EMC.id = EMIC.idEntradasMaquinasCheckList' + "\n"
             + ' INNER JOIN ItensCheckListModelos ICM ON ICM.id = EMIC.idItensCheckListModelos' + "\n"
