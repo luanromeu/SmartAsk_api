@@ -193,10 +193,9 @@ const ConvertAndSaveImages = async (data) => {
         let optionalObj = { 'type': 'jpg' };
         let promisse =
             await data.map(async (result) => {
-                console.log('asdas',result)
                 let subpromisse =
                     await result.fotos.map(async (res) => {
-                    
+                        
                         imageinfo.push({
                             image: base64ToImage(res, config.PATH_SAVE, optionalObj),
                             id: result.idPergunta,
@@ -221,11 +220,10 @@ const InsertSaidasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
     try {
      
         data.map(async (result) => {
-            console.log(imageinfo)
-            let dataImages = imageinfo.filter(image => image.id == result.idPergunta && image.idc == result.NumeroCheckList)
+         console.log('TA',result);
+            let dataImages = imageinfo.filter(image => image.id == result.idPergunta && image.idc == result.idchecklist);
+             
             dataImages.map(async(res) => {
-                
-                
                 
                 let SMIFC =
                 await SaidasMaquinasItensFotosCheckList.build({
@@ -432,7 +430,7 @@ const InsertEntradasMaquinasItensFotosCheckLists = async (imageinfo, data) => {
      
         data.map(async (result) => {
             console.log(imageinfo)
-            let dataImages = imageinfo.filter(image => image.id == result.idPergunta && image.idc == result.NumeroCheckList)
+            let dataImages = imageinfo.filter(image => image.id == result.idPergunta && image.idc == result.idchecklist)
             dataImages.map(async(res) => {
                 
                 

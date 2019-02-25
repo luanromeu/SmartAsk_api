@@ -69,13 +69,13 @@ exports.listChecklists = async (req, res, next) => {
                                                         res.status(200).send(data)
                                                         
                                                     } else {
-
+                                                        
                                     res.status(200).send({
 
                                         message: "Não foi encontrado nenhum resultado"
                                     })
 
-                                    throw new Error(e)
+                                
 
                                 }
 
@@ -154,11 +154,11 @@ exports.listChecklists = async (req, res, next) => {
                     }
 
     } catch (e) {
-
+        console.log(e)
         res.status(500).send({
             message: "Falha ao processar requisição"
         })
-        console.log(e)
+
     }
 }
 
@@ -172,7 +172,7 @@ exports.listChecklistsitens = async (req, res, next) => {
         const id = req.params.id
         const type = req.params.type
 
-        console.log('asdasd',req.params.id)
+        console.log('idSaidamAquinas',req.params.id)
 
             if (type === 'saida') {
 
@@ -412,7 +412,7 @@ exports.listImagesByItens = async (req, res, next) => {
         let iditem = req.query.iditem;
         let id = req.query.id
         let type  = req.query.type
-        console.log(id)
+        console.log('idSaidamaquinas', id)
         if (type === 'entrada') {
             let data =
                 await Repository.listImagesByItensInputChecklist(iditem, id)
