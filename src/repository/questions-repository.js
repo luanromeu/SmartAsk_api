@@ -50,7 +50,7 @@ exports.listTasksAndResponses = async (idquestion) => {
 exports.addNewQuestion = async (object) => {
 
     let error = false;
-
+  
     let veryfy =
         await Questions.findOne({
             raw: true,

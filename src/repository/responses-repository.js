@@ -10,7 +10,8 @@ var idGrupo;
 
 exports.addNewReponse = async (object,idquestion) => {
     try {
-       
+        
+        
         let group =
 
             await Group.find({
@@ -76,7 +77,7 @@ exports.addNewReponse = async (object,idquestion) => {
                 return;    
 
         } else {
-            
+            console.log(object)
             let groupresult;
             await group.Grupo == group.Grupo++ ? groupresult = await group.Grupo : groupresult = await group.Grupo++;
            

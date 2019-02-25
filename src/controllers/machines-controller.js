@@ -241,12 +241,13 @@ exports.questionsAndAnswersByQuiz = async (req, res, next) => {
             await Repository.questionsAndAnswersByQuiz(idQuestionario, idMaquina)
         //console.log(data)
 
-        array.push({
-            Altura: data[0].Altura,
-            AF: data[0].CodigoExibicao,
-            Modelo: data[0].Modelo,
+      
 
-        })
+            array.push({
+                Altura: data[0].Altura,
+                AF: data[0].CodigoExibicao,
+                Modelo: data[0].Modelo,
+            })
 
         data.forEach(res => {
 

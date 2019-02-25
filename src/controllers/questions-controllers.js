@@ -51,26 +51,28 @@ exports.listTasksAndResponses = async (req, res, next) => {
     try {
         let respostas = []
         let idquestion = req.query.id
+  
         let data =
             await Repository.listTasksAndResponses(idquestion)
-     if (data == null || data == undefined)
-        res.send(data)
-        else
-        data.forEach(res => {
+        if (data == null || data == undefined)
+            return res.send(data);
+        else {
+            data.forEach(res => {
 
-            let index = data.indexOf(res.Respostas)
-            if (index === -1) {
+                let index = data.indexOf(res.Respostas)
+                if (index === -1) {
 
-                data.forEach(res2 => {
-                    if (res.Respostas === res2.Respostas) {
-                        let index2 = respostas.indexOf(res2.Respostas)
-                        if (index2 === -1) {
-                            respostas.push(res2.Respostas)
+                    data.forEach(res2 => {
+                        if (res.Respostas === res2.Respostas) {
+                            let index2 = respostas.indexOf(res2.Respostas)
+                            if (index2 === -1) {
+                                respostas.push(res2.Respostas)
+                            }
                         }
-                    }
-                })
-            }
-        })
+                    })
+                }
+            })
+        }
         res.status(200).send(respostas)
 
     } catch (e) {
@@ -87,20 +89,20 @@ exports.addNewQuestion = async (req, res, next) => {
     try {
         let object = req.query
         let array = JSON.parse(req.query.responses)
-        
+
         let error =
             await Repository.addNewQuestion(object)
 
 
         if (error === true) {
-           
-        let update =
-         await Responses.update(object, array)
 
-         res.status(200).send({
-             message:"Respostas atualizadas com sucesso",
-             error,
-             update
+            let update =
+                await Responses.update(object, array)
+
+            res.status(200).send({
+                message: "Respostas atualizadas com sucesso",
+                error,
+                update
             })
 
         } else {
@@ -110,7 +112,7 @@ exports.addNewQuestion = async (req, res, next) => {
                 error
 
             })
-       }
+        }
 
 
 
