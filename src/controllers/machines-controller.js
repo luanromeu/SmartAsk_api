@@ -9,10 +9,10 @@ exports.listChecklists = async (req, res, next) => {
     try {
 
 
- let filterOption = JSON.parse(req.params.filterOption)
- 
-     if (filterOption.checklistStatus == 'saida') {
-            
+        let filterOption = JSON.parse(req.params.filterOption)
+
+        if (filterOption.checklistStatus == 'saida') {
+
             let filterParam = null;
             let startDate = null;
             let endDate = null;
@@ -23,67 +23,67 @@ exports.listChecklists = async (req, res, next) => {
                 filterParam = filterOption.checklistNumber
                 filterOption = 'SMC.id'
 
-                    } else if (filterOption.machineAF != "") {
+            } else if (filterOption.machineAF != "") {
 
-                        filterParam = filterOption.machineAF;
-                        filterOption = 'Ma.CodigoExibicao'
+                filterParam = filterOption.machineAF;
+                filterOption = 'Ma.CodigoExibicao'
 
-                            } else if (filterOption.machineModel != "") {
+            } else if (filterOption.machineModel != "") {
 
-                                filterParam = filterOption.machineModel;
-                                filterOption = 'Mo.Modelo';
+                filterParam = filterOption.machineModel;
+                filterOption = 'Mo.Modelo';
 
-                                    } else if (filterOption.checklistDateStart != "" && filterOption.checklistDateEnd != "") {
+            } else if (filterOption.checklistDateStart != "" && filterOption.checklistDateEnd != "") {
 
-                                        startDate = filterOption.checklistDateStart
-                                        endDate = filterOption.checklistDateEnd;
-                                        filterOption = 'SMC.Data'
+                startDate = filterOption.checklistDateStart
+                endDate = filterOption.checklistDateEnd;
+                filterOption = 'SMC.Data'
 
-                                        let dataDate =
-                                            await Repository.listOutChecklistsDate(startDate, endDate, filterOption)
-                                        res.status(200).send(dataDate);
-                                        return;
+                let dataDate =
+                    await Repository.listOutChecklistsDate(startDate, endDate, filterOption)
+                res.status(200).send(dataDate);
+                return;
 
-                                            } else if (filterOption.checklistDateStart != "") {
+            } else if (filterOption.checklistDateStart != "") {
 
-                                                filterParam = filterOption.checklistDateStart;
-                                                filterOption = 'SMC.Data >'
+                filterParam = filterOption.checklistDateStart;
+                filterOption = 'SMC.Data >'
 
-                                                        } else if (filterOption.checklistDateEnd != "") {
+            } else if (filterOption.checklistDateEnd != "") {
 
-                                                            filterParam = filterOption.checklistDateEnd
-                                                            filterOption = 'SMC.Data >'
+                filterParam = filterOption.checklistDateEnd
+                filterOption = 'SMC.Data >'
 
-                                                                    } else {
-                                                                        res.status(400).send({
-                                                                            message: "Falha ao Buscar Checklist, confira os filtros e tente novamente.."
-                                                                        })
-                                                                    }
+            } else {
+                res.status(400).send({
+                    message: "Falha ao Buscar Checklist, confira os filtros e tente novamente.."
+                })
+            }
 
-                                                                var data =
+            var data =
 
-                                                                    await Repository.listOutChecklists(filterOption, filterParam)
+                await Repository.listOutChecklists(filterOption, filterParam)
 
-                                                    if (data.length != 0) {
+            if (data.length != 0) {
 
-                                                        res.status(200).send(data)
-                                                        
-                                                    } else {
-                                                        
-                                    res.status(200).send({
+                res.status(200).send(data)
 
-                                        message: "Não foi encontrado nenhum resultado"
-                                    })
+            } else {
 
-                                
+                res.status(200).send({
 
-                                }
+                    message: "Não foi encontrado nenhum resultado"
+                })
 
-                        } else if (filterOption.checklistStatus == 'entrada') {
-                            
-                            let filterParam = null;
-                            let startDate = null;
-                            let endDate = null;
+
+
+            }
+
+        } else if (filterOption.checklistStatus == 'entrada') {
+
+            let filterParam = null;
+            let startDate = null;
+            let endDate = null;
 
 
             if (filterOption.checklistNumber != "") {
@@ -91,67 +91,67 @@ exports.listChecklists = async (req, res, next) => {
                 filterParam = filterOption.checklistNumber
                 filterOption = 'EMC.id'
 
-     } else if (filterOption.machineAF != "") {
+            } else if (filterOption.machineAF != "") {
 
-          filterParam = filterOption.machineAF;
-          filterOption = 'Ma.CodigoExibicao'
+                filterParam = filterOption.machineAF;
+                filterOption = 'Ma.CodigoExibicao'
 
             } else if (filterOption.machineModel != "") {
 
                 filterParam = filterOption.machineModel;
                 filterOption = 'Mo.Modelo';
 
-                    } else if (filterOption.checklistDateStart != "" && filterOption.checklistDateEnd != "") {
+            } else if (filterOption.checklistDateStart != "" && filterOption.checklistDateEnd != "") {
 
-                        startDate = filterOption.checklistDateStart
-                        endDate = filterOption.checklistDateEnd;
-                        filterOption = 'EMC.Data'
+                startDate = filterOption.checklistDateStart
+                endDate = filterOption.checklistDateEnd;
+                filterOption = 'EMC.Data'
 
-                            let dataDate =
-                                await Repository.listInputChecklistsDate(startDate, endDate, filterOption)
-                            res.status(200).send(dataDate);
-                            return;
+                let dataDate =
+                    await Repository.listInputChecklistsDate(startDate, endDate, filterOption)
+                res.status(200).send(dataDate);
+                return;
 
-                                    } else if (filterOption.checklistDateStart != "") {
+            } else if (filterOption.checklistDateStart != "") {
 
-                                        filterParam = filterOption.checklistDateStart;
-                                        filterOption = 'EMC.Data >'
+                filterParam = filterOption.checklistDateStart;
+                filterOption = 'EMC.Data >'
 
-                                                } else if (filterOption.checklistDateEnd != "") {
+            } else if (filterOption.checklistDateEnd != "") {
 
-                                                    filterParam = filterOption.checklistDateEnd
-                                                    filterOption = 'EMC.Data >'
+                filterParam = filterOption.checklistDateEnd
+                filterOption = 'EMC.Data >'
 
-                                                        } else {
-                                                            res.status(400).send({
-                                                                message: "Falha ao Buscar Checklist, confira os filtros e tente novamente.."
-                                                            })
-                                                        }
+            } else {
+                res.status(400).send({
+                    message: "Falha ao Buscar Checklist, confira os filtros e tente novamente.."
+                })
+            }
 
-                                                    var data =
+            var data =
 
-                                                        await Repository.listInputChecklists(filterOption, filterParam)
+                await Repository.listInputChecklists(filterOption, filterParam)
 
-                                            if (data.length != 0) {
+            if (data.length != 0) {
 
-                                                res.status(200).send(data)
+                res.status(200).send(data)
 
-                                            } else {
+            } else {
 
-                            res.status(200).send({
+                res.status(200).send({
 
-                                message: "Não foi encontrado nenhum resultado"
-                            })
+                    message: "Não foi encontrado nenhum resultado"
+                })
 
-                            console.log(e)
-                            throw new Error(e)
-                            
-                        }
+                console.log(e)
+                throw new Error(e)
 
-                    } else {
+            }
 
-                        throw new Error()
-                    }
+        } else {
+
+            throw new Error()
+        }
 
     } catch (e) {
         console.log(e)
@@ -172,25 +172,25 @@ exports.listChecklistsitens = async (req, res, next) => {
         const id = req.params.id
         const type = req.params.type
 
-        console.log('idSaidamAquinas',req.params.id)
+        console.log('idSaidamAquinas', req.params.id)
 
-            if (type === 'saida') {
+        if (type === 'saida') {
 
-        const data =
-            await Repository.listOutChecklistItens(AF, id)
-        res.status(200).send(data)
+            const data =
+                await Repository.listOutChecklistItens(AF, id)
+            res.status(200).send(data)
 
-    } else if (type === 'entrada') {
+        } else if (type === 'entrada') {
 
-        const data2 =
-            await Repository.listInputChecklistItens(AF, id)
-        res.status(200).send(data2)
-    
-            } else {
+            const data2 =
+                await Repository.listInputChecklistItens(AF, id)
+            res.status(200).send(data2)
 
-                throw new Error()
-            }
-        
+        } else {
+
+            throw new Error()
+        }
+
 
     } catch (e) {
 
@@ -209,21 +209,26 @@ exports.listModels = async (req, res, next) => {
         let models = []
         var data =
             await Repository.listModels()
+
         data.forEach(res => {
-            models.push(
-                {
-                    Modelo: res.Modelo,
-                    id: res.id,
-                    idMaquina: res.idMaquina
-                })
+
+
+
+            models.push({
+                Modelo: res.Modelo,
+                id: res.id,
+                idMaquina: res.idMaquina
+            })
+
         })
+
         res.status(200).send(models)
     } catch (e) {
-
+        console.log(e)
         res.status(500).send({
             message: "Falha ao processar requisição"
         })
-        console.log(error)
+
     }
 
 }
@@ -241,13 +246,13 @@ exports.questionsAndAnswersByQuiz = async (req, res, next) => {
             await Repository.questionsAndAnswersByQuiz(idQuestionario, idMaquina)
         //console.log(data)
 
-      
 
-            array.push({
-                Altura: data[0].Altura,
-                AF: data[0].CodigoExibicao,
-                Modelo: data[0].Modelo,
-            })
+
+        array.push({
+            Altura: data[0].Altura,
+            AF: data[0].CodigoExibicao,
+            Modelo: data[0].Modelo,
+        })
 
         data.forEach(res => {
 
@@ -411,14 +416,14 @@ exports.listImagesByItens = async (req, res, next) => {
     try {
         let iditem = req.query.iditem;
         let id = req.query.id
-        let type  = req.query.type
+        let type = req.query.type
         console.log('idSaidamaquinas', id)
         if (type === 'entrada') {
             let data =
                 await Repository.listImagesByItensInputChecklist(iditem, id)
             res.status(200).send(data)
-    
-        } else if ( type == 'saida') {
+
+        } else if (type == 'saida') {
 
             let data2 =
                 await Repository.listImagesByItensOutChecklist(iditem, id)
@@ -428,7 +433,7 @@ exports.listImagesByItens = async (req, res, next) => {
 
             throw new Error()
         }
-        
+
     } catch (e) {
 
         res.status(500).send({

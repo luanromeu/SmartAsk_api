@@ -551,12 +551,12 @@ exports.listModels = async () => {
     try {
         let res =
             await Sequelize.query(
-                ' SELECT  Mo.id, Concat(Mo.Modelo, " - " , Ma.CodigoExibicao) As Modelo , Ma.id AS idMaquina' + "\n"
+                ' SELECT  Mo.id, Mo.Modelo, Ma.CodigoExibicao, Ma.id AS idMaquina' + "\n"
                 + ' FROM Modelos Mo' + "\n"
                 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id' + "\n"
                 + ' WHERE Mo.Inativo = 0 OR Mo.Inativo IS NULL' + "\n"
                 + ' AND  Ma.Inativo = 0 OR Ma.Inativo IS NULL' + "\n"
-                + ' AND  Ma.idModelos <> NULL '
+                + ' AND  Ma.idModelos <> NULL  group by Mo.Modelo'
 
                 , { type: sequelize.QueryTypes.SELECT })
 

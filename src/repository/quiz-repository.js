@@ -43,7 +43,7 @@ exports.QuizDetails = async (idQuiz) => {
         let res =
             await Sequelize.query(
 
-                  ' SELECT Concat(Mo.Modelo," - ",Ma.CodigoExibicao) AS Modelo, Mo.id, ICM.Descricao AS Perguntas, ICM.id AS idPergunta FROM ModelosQuestionarios MQ ' + "\n"
+                  ' SELECT Mo.Modelo, Ma.CodigoExibicao , Mo.id, ICM.Descricao AS Perguntas, ICM.id AS idPergunta FROM ModelosQuestionarios MQ ' + "\n"
                 + ' INNER JOIN Modelos Mo ON  MQ.idModelos = Mo.id' + "\n"
                 + ' INNER JOIN Maquinas Ma ON Ma.idModelos = Mo.id'
                 + ' INNER JOIN Questionarios Q ON MQ.idQuestionario = Q.id' + "\n"
