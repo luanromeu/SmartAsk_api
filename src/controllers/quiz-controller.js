@@ -1,6 +1,6 @@
 'use strict'
 
-const Repository = require('../repository/quiz-repository')
+
 const authService = require('../services/auth-service')
 
 

@@ -1,7 +1,5 @@
 'use strict'
 
-const Repository = require('../repository/questions-repository');
-const Responses = require('../controllers/responses-controllers')
 
 exports.listQuestions = async (req, res, next) => {
 

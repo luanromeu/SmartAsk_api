@@ -1,22 +1,18 @@
 'use strict'
 
 
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('tetsiste_checklist', 'tetsistemas_t', 'T&TSistemas2007', {
-  host: '189.7.97.7',
-  dialect: 'mysql',
-  operatorsAliases: false,
-  timezone: '-03:00', // for writing to database
-  connectionTimeout:10000,
- });
+const mongoose = require('mongoose');
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
 
-module.exports = sequelize;
+global.db = mongoose.connect('mongodb://localhost:27017/Smartask' ,{ useNewUrlParser: true, useCreateIndex: true });
+mongoose.connection.on('connected', function () {
+ console.log('=====Conexão estabelecida com sucesso=====');
+});
+mongoose.connection.on('error', function (err) {
+ console.log('=====Ocorreu um erro: ' + err);
+});
+mongoose.connection.on('disconnected', function () {
+ console.log('=====Conexão finalizada=====');
+}); 
+
+module.exports = mongoose;
