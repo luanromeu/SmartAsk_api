@@ -44,7 +44,7 @@ exports.authenticate = async (user) => {
         const res = await
             Customer.findOne({
                     
-                    name: user.user,
+                    email: user.email,
                     password: user.password
                  })
 

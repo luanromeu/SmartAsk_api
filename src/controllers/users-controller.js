@@ -45,7 +45,7 @@ exports.authenticate = async (req, res, next) => {
        
         const user = await
          Repository.authenticate({
-            user: req.body.user,
+            email: req.body.email,
             password: md5(req.body.password)
         });
 
